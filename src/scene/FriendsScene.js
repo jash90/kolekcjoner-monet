@@ -19,9 +19,9 @@ import {
   Thumbnail,
   List
 } from 'native-base';
-import SideBar from './SideBar';
-import user from './../img/logo.png';
-import collection from './../img/drawer-cover.png';
+import SideBar from '../components/SideBar';
+import user from '../img/logo.png';
+import collection from '../img/drawer-cover.png';
 var items= ['Bartek','Justyna','Rafał', 'Marek', 'Wojtek'];
 class FriendsScene extends Component {
   render() {

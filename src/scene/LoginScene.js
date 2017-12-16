@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View} from 'react-native'
+import {Platform, StyleSheet, View, TouchableOpacity} from 'react-native'
 import {
   Container,
   Header,
@@ -17,6 +17,13 @@ import {
 } from 'native-base';
 import {Actions} from 'react-native-router-flux';
 class LoginScene extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      login:'rafal',
+      password:'123456'
+    }
+  }
   render() {
     return (
       <Container>
@@ -40,11 +47,11 @@ class LoginScene extends Component {
           <Form>
             <Item floatingLabel>
               <Label>Login</Label>
-              <Input/>
+              <Input value={this.state.login} onChangeText={(text)=>this.setState({login:text})}/>
             </Item>
             <Item floatingLabel last>
               <Label>Hasło</Label>
-              <Input/>
+              <Input value={this.state.password} secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})}/>
             </Item>
           </Form>
           <Button
@@ -53,12 +60,13 @@ class LoginScene extends Component {
             marginTop: 10,
             marginBottom: 10
           }}
-            onPress={() => Actions.HomeScene()}>
+          onPress={()=> this.onLogin()}
+           >
             <Text>
               Zaloguj
             </Text>
           </Button>
-          <Button block>
+          <Button block onPress={()=> Actions.RegisterScene()}>
             <Text>
               Zarejestruj
             </Text>
@@ -66,6 +74,18 @@ class LoginScene extends Component {
         </View>
       </Container>
     );
+  }
+  onLogin=()=>{
+    if (this.state.login!='rafal'){
+      alert('Niepoprawny Login lub Hasło.');
+      return;
+    }
+
+    if (this.state.password!='123456'){
+      alert('Niepoprawny Login lub Hasło.');
+      return;
+    }
+    Actions.HomeScene();
   }
 }
 

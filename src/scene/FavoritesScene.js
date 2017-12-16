@@ -20,11 +20,11 @@ import {
   Thumbnail,
   List
 } from 'native-base';
-import SideBar from '../SideBar';
-import user from '../../img/logo.png';
-import collection from '../../img/drawer-cover.png';
+import SideBar from '../components/SideBar';
+import user from '../img/logo.png';
+import collection from '../img/drawer-cover.png';
 var items= ['sdfs','123','shdfgsjd'];
-class HomeScene extends Component {
+class FavoritesScene extends Component {
   render() {
     return (
       <Container>
@@ -37,7 +37,7 @@ class HomeScene extends Component {
           <Body>
             <Text style={{
               color: '#fff'
-            }}>Kolekcjoner Monet</Text>
+            }}>Ulubione Monety</Text>
           </Body>
         </Header>
         <Drawer
@@ -110,4 +110,4 @@ class HomeScene extends Component {
   };
 }
 
-export default HomeScene;
+export default FavoritesScene;
