@@ -82,8 +82,10 @@ class HomeScene extends Component {
               }}>
                 <CardItem>
                   <TouchableOpacity onPress={() => Actions.MyCollections({image: user1})}>
-                    <View style={{
-                      flex: 1, marginRight:10
+                    <View
+                      style={{
+                      flex: 1,
+                      marginRight: 10
                     }}>
                       <Thumbnail small source={user1}/>
                     </View>
@@ -150,8 +152,10 @@ class HomeScene extends Component {
               }}>
                 <CardItem>
                   <TouchableOpacity onPress={() => Actions.MyCollections({image: user2})}>
-                    <View style={{
-                      flex: 1, marginRight:10
+                    <View
+                      style={{
+                      flex: 1,
+                      marginRight: 10
                     }}>
                       <Thumbnail small source={user2}/>
                     </View>
@@ -218,8 +222,10 @@ class HomeScene extends Component {
               }}>
                 <CardItem>
                   <TouchableOpacity onPress={() => Actions.MyCollections({image: user3})}>
-                    <View style={{
-                      flex: 1, marginRight:10
+                    <View
+                      style={{
+                      flex: 1,
+                      marginRight: 10
                     }}>
                       <Thumbnail small source={user3}/>
                     </View>
@@ -286,8 +292,10 @@ class HomeScene extends Component {
               }}>
                 <CardItem>
                   <TouchableOpacity onPress={() => Actions.MyCollections({image: user4})}>
-                    <View style={{
-                      flex: 1, marginRight:10
+                    <View
+                      style={{
+                      flex: 1,
+                      marginRight: 10
                     }}>
                       <Thumbnail small source={user4}/>
                     </View>
@@ -298,14 +306,12 @@ class HomeScene extends Component {
                       fontSize: 12
                     }}>12 listopada 2017</Text>
                   </Body>
-
                   <Right>
                     <Text>
                       41 minut temu
                     </Text>
                   </Right>
                 </CardItem>
-
                 <CardItem cardBody>
                   <TouchableOpacity
                     style={{
@@ -354,8 +360,10 @@ class HomeScene extends Component {
               }}>
                 <CardItem>
                   <TouchableOpacity onPress={() => Actions.MyCollections({image: user5})}>
-                    <View style={{
-                      flex: 1, marginRight:10
+                    <View
+                      style={{
+                      flex: 1,
+                      marginRight: 10
                     }}>
                       <Thumbnail small source={user5}/>
                     </View>

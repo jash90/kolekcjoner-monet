@@ -1,21 +1,17 @@
-import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  View
-} from 'react-native';
-import { Router, Stack, Scene } from 'react-native-router-flux';
+import React, {Component} from 'react';
+import {Platform, StyleSheet, View} from 'react-native';
+import {Router, Stack, Scene, Actions} from 'react-native-router-flux';
 import LoginScene from './src/scene/LoginScene';
 import HomeScene from './src/scene/HomeScene';
 import FriendsScene from './src/scene/FriendsScene';
 import FavoritesScene from './src/scene/FavoritesScene';
 import MyCollections from './src/scene/MyCollections';
 import RegisterScene from './src/scene/RegisterScene';
-import PostDetails from './src/scene/PostDetails'; 
+import PostDetails from './src/scene/PostDetails';
 class App extends Component {
   render() {
     return (
-      <Router>
+      <Router backAndroidHandler={() => Actions.pop()}>
         <Stack key="root">
           <Scene key="LoginScene" component={LoginScene} hideNavBar/>
           <Scene key="HomeScene" component={HomeScene} hideNavBar/>
@@ -25,7 +21,8 @@ class App extends Component {
           <Scene key='RegisterScene' component={RegisterScene} hideNavBar/>
           <Scene key='PostDetails' component={PostDetails} hideNavBar/>
         </Stack>
-      </Router>);
+      </Router>
+    );
   }
 }
 export default App;

@@ -32,7 +32,7 @@ class SideBar extends Component {
           backgroundColor: '#fff'
         }}>
           <List>
-            <ListItem icon onPress={()=>Actions.HomeScene()}>
+            <ListItem icon onPress={() => Actions.HomeScene()}>
               <Left>
                 <Icon name="ios-list"/>
               </Left>
@@ -40,7 +40,7 @@ class SideBar extends Component {
                 <Text>Przeglądaj</Text>
               </Body>
             </ListItem>
-            <ListItem icon onPress={()=>Actions.FriendsScene()}>
+            <ListItem icon onPress={() => Actions.FriendsScene()}>
               <Left>
                 <Icon name="ios-contacts"/>
               </Left>
@@ -49,7 +49,7 @@ class SideBar extends Component {
               </Body>
             </ListItem>
             <ListItem itemDivider/>
-            <ListItem icon onPress={()=>Actions.MyCollections()}>
+            <ListItem icon onPress={() => Actions.MyCollections()}>
               <Left>
                 <Icon name="ios-contact"/>
               </Left>
@@ -57,7 +57,7 @@ class SideBar extends Component {
                 <Text>Moja kolekcja</Text>
               </Body>
             </ListItem>
-            <ListItem icon onPress={()=>Actions.FavoritesScene()}>
+            <ListItem icon onPress={() => Actions.FavoritesScene()}>
               <Left>
                 <Icon name="ios-heart"/>
               </Left>
@@ -66,14 +66,14 @@ class SideBar extends Component {
               </Body>
             </ListItem>
             <ListItem itemDivider/>
-              <ListItem icon onPress={()=>Actions.LoginScene()}>
-                <Left>
-                  <Icon name="exit"/>
-                </Left>
-                <Body>
-                  <Text>Wyloguj</Text>
-                </Body>
-              </ListItem>
+            <ListItem icon onPress={() => Actions.LoginScene()}>
+              <Left>
+                <Icon name="exit"/>
+              </Left>
+              <Body>
+                <Text>Wyloguj</Text>
+              </Body>
+            </ListItem>
           </List>
         </Content>
       </Container>

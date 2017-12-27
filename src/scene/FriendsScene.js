@@ -22,7 +22,7 @@ import {
 import SideBar from '../components/SideBar';
 import user from '../img/logo.png';
 import collection from '../img/drawer-cover.png';
-var items= ['Bartek','Justyna','Rafał', 'Marek', 'Wojtek'];
+var items = ['Bartek', 'Justyna', 'Rafał', 'Marek', 'Wojtek'];
 class FriendsScene extends Component {
   render() {
     return (
@@ -45,18 +45,37 @@ class FriendsScene extends Component {
         }}
           content={< SideBar />}
           onClose={() => this.closeDrawer()}>
-          <Content style={{backgroundColor:'#fff'}}>
+          <Content style={{
+            backgroundColor: '#fff'
+          }}>
             <List
               dataArray={items}
-              renderRow={(item) =>  <View style={{justifyContent:'center', flexDirection:'row',  alignSelf:'flex-start'}}>
-              <View style={{justifyContent:'center',}}>
-                  <Icon name={'ios-contact'} style={{fontSize:60, marginLeft:10, marginRight:10}}/>
-                  </View>
-                  <View style={{alignItems:'flex-start',justifyContent:'center'}}>
-                  <Text>{item}</Text>
-                  <Text note>Kolekcja Starych Monet, Monety z II Wojny Światowej</Text>
-                  </View>
-                </View>}/>
+              renderRow={(item) => <View
+              style={{
+              justifyContent: 'center',
+              flexDirection: 'row',
+              alignSelf: 'flex-start'
+            }}>
+              <View style={{
+                justifyContent: 'center'
+              }}>
+                <Icon
+                  name={'ios-contact'}
+                  style={{
+                  fontSize: 60,
+                  marginLeft: 10,
+                  marginRight: 10
+                }}/>
+              </View>
+              <View
+                style={{
+                alignItems: 'flex-start',
+                justifyContent: 'center'
+              }}>
+                <Text>{item}</Text>
+                <Text note>Kolekcja Starych Monet, Monety z II Wojny Światowej</Text>
+              </View>
+            </View>}/>
           </Content>
         </Drawer>
       </Container>

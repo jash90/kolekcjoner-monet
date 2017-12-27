@@ -65,7 +65,11 @@ class MyCollections extends Component {
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Thumbnail large source={this.props.image?this.props.image:user} />
+              <Thumbnail
+                large
+                source={this.props.image
+                ? this.props.image
+                : user}/>
               <View style={{
                 alignItems: 'center'
               }}>

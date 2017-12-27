@@ -23,7 +23,7 @@ import {
 import SideBar from '../components/SideBar';
 import user from '../img/logo.png';
 import collection from '../img/drawer-cover.png';
-var items= ['sdfs','123','shdfgsjd'];
+var items = ['sdfs', '123', 'shdfgsjd'];
 class FavoritesScene extends Component {
   render() {
     return (
@@ -69,10 +69,10 @@ class FavoritesScene extends Component {
                   <Image
                     source={collection}
                     style={{
-                    width:'95%',
-                    height:200,
-                    alignSelf:'center',
-                    flex:1
+                    width: '95%',
+                    height: 200,
+                    alignSelf: 'center',
+                    flex: 1
                   }}/>
                 </Body>
               </CardItem>

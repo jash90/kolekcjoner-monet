@@ -34,27 +34,22 @@ var items = [
     {
         url: user1,
         text: 'super'
-    },
-    {
+    }, {
         url: user2,
         text: 'ładna moneta'
-    },
-    {
+    }, {
         url: user3,
         text: 'dobre'
-    },
-    {
+    }, {
         url: user4,
         text: '10/10'
-    },
-    {
+    }, {
         url: user5,
         text: 'fajne'
-    },
-    {
+    }, {
         url: user6,
         text: 'jest git'
-    },
+    }
 ];
 import moneta1 from '../img/monety/moneta1.jpg';
 import moneta2 from '../img/monety/moneta2.jpg';
@@ -110,7 +105,11 @@ class HomeScene extends Component {
                                     <Thumbnail small source={this.props.user}/>
                                     <Body>
                                         <Text>Marek Janusz</Text>
-                                        <Text note style={{fontSize:12}}>12 listopada 2017</Text>
+                                        <Text
+                                            note
+                                            style={{
+                                            fontSize: 12
+                                        }}>12 listopada 2017</Text>
                                     </Body>
                                 </Left>
                                 <Right>
@@ -161,7 +160,12 @@ class HomeScene extends Component {
                                         style={{
                                         marginRight: 10
                                     }}/>
-                                    <Input placeholder={'Dodaj Komentarz...'}style={{backgroundColor:'#fafafa', borderRadius:20}}/>
+                                    <Input
+                                        placeholder={'Dodaj Komentarz...'}
+                                        style={{
+                                        backgroundColor: '#fafafa',
+                                        borderRadius: 20
+                                    }}/>
                                 </Left>
                             </CardItem>
                             <List
