@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {
   Platform,
   StyleSheet,
   View,
   Image,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  ScrollView
 } from "react-native";
 import {
   Container,
@@ -29,20 +30,21 @@ import {
 import SideBar from "../components/SideBar";
 import user from "../img/logo.png";
 import collection from "../img/drawer-cover.png";
-import PhotoGrid from "react-native-thumbnail-grid";
-import ModalImage from "./ModalImage";
+import {PhotoGrid} from "../components/PhotoGrid";
+import Photo from '../img/Photo';
+import ModalImage from "../components/ModalImage";
 var items = ["sdfs", "123", "shdfgsjd"];
 const images = [
   "https://mennicazlota.pl/media/catalog/product/cache/16/image/9df78eab33525d08d6e" +
-    "5fb8d27136e95/k/r/krugerand_1oz_a.jpg",
+      "5fb8d27136e95/k/r/krugerand_1oz_a.jpg",
   "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/George_Washington_Pres" +
-    "idential_%241_Coin_obverse.png/480px-George_Washington_Presidential_%241_Coin_ob" +
-    "verse.png",
+      "idential_%241_Coin_obverse.png/480px-George_Washington_Presidential_%241_Coin_ob" +
+      "verse.png",
   "https://www.apmex.com/handlers/ThumbJpeg.ashx?VFilePath=~/Resources/Catalog%20Im" +
-    "ages/Products/28432_Obv.jpg&width=300&height=300",
+      "ages/Products/28432_Obv.jpg&width=300&height=300",
   "https://d-w24.ppstatic.pl/g2/81/f4/f8/142385_1276095334_02a6_p.jpeg",
   "https://mennicazlota.pl/media/catalog/product/cache/16/image/9df78eab33525d08d6e" +
-    "5fb8d27136e95/1/b/1b_11_2.jpg"
+      "5fb8d27136e95/1/b/1b_11_2.jpg"
 ];
 class MyCollections extends Component {
   constructor(props) {
@@ -62,80 +64,69 @@ class MyCollections extends Component {
               <Icon
                 name={"ios-menu"}
                 style={{
-                  color: "#fff"
-                }}
-              />
+                color: "#fff"
+              }}/>
             </Button>
           </Left>
           <Body>
-            <Text
-              style={{
-                color: "#fff"
-              }}
-            >
+            <Text style={{
+              color: "#fff"
+            }}>
               Moja kolekcja
             </Text>
           </Body>
         </Header>
         <Drawer
           ref={ref => {
-            this.drawer = ref;
-          }}
-          content={<SideBar />}
-          onClose={() => this.closeDrawer()}
-        >
+          this.drawer = ref;
+        }}
+          content={< SideBar />}
+          onClose={() => this.closeDrawer()}>
           <Content>
             <View
               style={{
-                justifyContent: "center",
-                alignSelf: "center"
-              }}
-            >
+              justifyContent: "center",
+              alignSelf: "center"
+            }}>
               <Thumbnail
                 large
-                source={this.props.image ? this.props.image : user}
-              />
-              <View
-                style={{
-                  alignItems: "center"
-                }}
-              >
+                source={this.props.image
+                ? this.props.image
+                : user}/>
+              <View style={{
+                alignItems: "center"
+              }}>
                 <Text>Imię i Nazwisko</Text>
               </View>
             </View>
-            <PhotoGrid
-              source={images}
-              onPressImage={(image) => this.onVisibleImage(image)}
-              onPressOut={() => this.onDismissModal()}
-              style={{
-                backgroundColor: "#fff"
-              }}
-              imageStyle={{
-                backgroundColor: "#fff"
-              }}
-              imageProps={{
-                resizeMethod: "scale",
-                resizeMode: "contain"
-              }}
-            />
-            <ModalImage visible={this.state.visible} image={this.state.image} onCancel={()=>this.onDismissModal()}/>
+              <PhotoGrid PhotosList={Photo} borderRadius={10}/>
+            <ModalImage
+              visible={this.state.visible}
+              image={this.state.image}
+              onCancel={() => this.onDismissModal()}/>
           </Content>
         </Drawer>
       </Container>
     );
   }
   onVisibleImage = img => {
-    this.setState({ image: img });
-    this.setState({ visible: true });
+    this.setState({image: img});
+    this.setState({visible: true});
   };
   onDismissModal = () => {
-    this.setState({ visible: false });
+    this.setState({visible: false});
   };
   closeDrawer = () => {
-    this.drawer._root.close();
+    this
+      .drawer
+      ._root
+      .close();
   };
   openDrawer = () => {
-    this.drawer._root.open();
+    this
+      .drawer
+      ._root
+      .open();
   };
 }
 
