@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "511318781634",
+    "firebase_url": "https://kolekcjonermonet-f64d0.firebaseio.com",
+    "project_id": "kolekcjonermonet-f64d0",
+    "storage_bucket": "kolekcjonermonet-f64d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511318781634:android:785d3561c40b79cf",
+        "android_client_info": {
+          "package_name": "pl.kolekcjonermonet.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511318781634-i7noao5v028bn9p1uf0ahd6cgj5ai2je.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGR-X4QlD9bIzt54DfWxOx6-KA8TIYW2o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
