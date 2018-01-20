@@ -26,15 +26,21 @@ class SideBar extends Component {
     this.state = {};
   }
   render() {
-    return (
-      <Container>
-        <Content style={{
-          backgroundColor: '#fff'
-        }}>
+    return <Container>
+        <Content style={{ backgroundColor: "#fff" }}>
           <List>
             <ListItem icon onPress={() => Actions.HomeScene()}>
               <Left>
-                <Icon name="ios-list"/>
+                < Icon name = "ios-send" />
+              </Left>
+              <Body>
+                <Text>Wyślij zdjęcie</Text>
+              </Body>
+            </ListItem>
+            <ListItem itemDivider/>
+            <ListItem icon onPress={() => Actions.HomeScene()}>
+              <Left>
+                <Icon name="ios-list" />
               </Left>
               <Body>
                 <Text>Przeglądaj</Text>
@@ -42,16 +48,16 @@ class SideBar extends Component {
             </ListItem>
             <ListItem icon onPress={() => Actions.FriendsScene()}>
               <Left>
-                <Icon name="ios-contacts"/>
+                <Icon name="ios-contacts" />
               </Left>
               <Body>
                 <Text>Twoi znajomi</Text>
               </Body>
             </ListItem>
-            <ListItem itemDivider/>
+            <ListItem itemDivider />
             <ListItem icon onPress={() => Actions.MyCollections()}>
               <Left>
-                <Icon name="ios-contact"/>
+                <Icon name="ios-contact" />
               </Left>
               <Body>
                 <Text>Moja kolekcja</Text>
@@ -59,16 +65,16 @@ class SideBar extends Component {
             </ListItem>
             <ListItem icon onPress={() => Actions.FavoritesScene()}>
               <Left>
-                <Icon name="ios-heart"/>
+                <Icon name="ios-heart" />
               </Left>
               <Body>
                 <Text>Ulubione kolekcje</Text>
               </Body>
             </ListItem>
-            <ListItem itemDivider/>
+            <ListItem itemDivider />
             <ListItem icon onPress={() => Actions.LoginScene()}>
               <Left>
-                <Icon name="exit"/>
+                <Icon name="exit" />
               </Left>
               <Body>
                 <Text>Wyloguj</Text>
@@ -76,8 +82,7 @@ class SideBar extends Component {
             </ListItem>
           </List>
         </Content>
-      </Container>
-    );
+      </Container>;
   }
 }
 export default SideBar;

@@ -8,6 +8,7 @@ import FavoritesScene from './src/scene/FavoritesScene';
 import MyCollections from './src/scene/MyCollections';
 import RegisterScene from './src/scene/RegisterScene';
 import PostDetails from './src/scene/PostDetails';
+import SendScene from './src/scene/SendScene';
 class App extends Component {
   render() {
     return (
@@ -20,6 +21,7 @@ class App extends Component {
           <Scene key="MyCollections" component={MyCollections} hideNavBar/>
           <Scene key='RegisterScene' component={RegisterScene} hideNavBar/>
           <Scene key='PostDetails' component={PostDetails} hideNavBar/>
+          <Scene key='SendScene' component={SendScene} hideNavBar initial/>
         </Stack>
       </Router>
     );

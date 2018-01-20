@@ -4,5 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
+    <style name="DefaultExplainingPermissionsTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+        <item name="colorAccent">#123455</item>
 
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">#000</item>
+
+        <!-- Used for the background -->
+        <item name="android:background">#fff</item>
+    </style>
 </resources>

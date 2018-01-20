@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, TouchableOpacity} from 'react-native'
+import {Platform, StyleSheet, View, TouchableOpacity, ToastAndroid} from 'react-native'
 import {
   Container,
   Header,
@@ -16,12 +16,17 @@ import {
   Drawer
 } from 'native-base';
 import {Actions} from 'react-native-router-flux';
+import ModalLoading from '../components/ModalLoading';
+import firebase  from 'react-native-firebase';
 class LoginScene extends Component {
   constructor(props){
     super(props);
     this.state={
-      login:'rafal',
-      password:'123456'
+      login:'rafal@gg.pl',
+      password:'123456',
+      loading: false,
+      error:""
+      
     }
   }
   render() {
@@ -54,6 +59,10 @@ class LoginScene extends Component {
               <Input value={this.state.password} secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})}/>
             </Item>
           </Form>
+          <ModalLoading
+            text={"Logowanie..."}
+            visible={this.state.loading}
+          />
           <Button
             block
             style={{
@@ -76,16 +85,20 @@ class LoginScene extends Component {
     );
   }
   onLogin=()=>{
-    if (this.state.login!='rafal'){
-      alert('Niepoprawny Login lub Hasło.');
-      return;
-    }
-
-    if (this.state.password!='123456'){
-      alert('Niepoprawny Login lub Hasło.');
-      return;
-    }
-    Actions.HomeScene();
+    this.setState({loading:true});
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.login, this.state.password)
+      .then((data) => {
+       // alert(JSON.stringify(data));
+        ToastAndroid.show("Zalogowałes sie jako "+ data.email+" .", ToastAndroid.SHORT);
+        Actions.HomeScene();
+        this.setState({ error: "", loading: false });
+      })
+      .catch(error => {
+        this.setState({ error: "Authentication failed.", loading: false });
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      });
   }
 }
 
