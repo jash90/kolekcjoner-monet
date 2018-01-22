@@ -21,7 +21,7 @@ class App extends Component {
           <Scene key="MyCollections" component={MyCollections} hideNavBar/>
           <Scene key='RegisterScene' component={RegisterScene} hideNavBar/>
           <Scene key='PostDetails' component={PostDetails} hideNavBar/>
-          <Scene key='SendScene' component={SendScene} hideNavBar initial/>
+          <Scene key='SendScene' component={SendScene} hideNavBar/>
         </Stack>
       </Router>
     );

@@ -44,6 +44,8 @@ import user5 from '../img/kontakty/sanket.png';
 import user6 from '../img/kontakty/sankhadeep.png';
 import {Actions} from 'react-native-router-flux';
 import ImageViewer from 'react-native-image-view';
+import firebase from 'react-native-firebase';
+import Moment from 'moment';
 const images = [
   {
     src: '../../img/moneta1.png'
@@ -54,6 +56,45 @@ const images = [
   }
 ]
 class HomeScene extends Component {
+  constructor(props) {
+    super(props);
+    this.ref = firebase
+      .firestore()
+      .collection('posts');
+    this.unsubscribe = null;
+    this.state = {
+      loading: true,
+      todos: [],
+      image:null,
+    };
+  }
+  componentDidMount() {
+    this.unsubscribe = this
+      .ref
+      .onSnapshot(this.onCollectionUpdate)
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  onCollectionUpdate = (querySnapshot) => {
+    const todos = [];
+    querySnapshot.forEach((doc) => {
+      const {idusers, likes, comments, description, dateupdate} = doc.data();
+      todos.push({
+        key: doc.id,
+        idusers,
+        likes,
+        comments,
+        description,
+        dateupdate,
+      });
+
+    });
+
+    this.setState({todos, loading: false});
+   // console.log(this.state.todos);
+  }
   render() {
     return (
       <Container>
@@ -76,356 +117,75 @@ class HomeScene extends Component {
           content={< SideBar />}
           onClose={() => this.closeDrawer()}>
           <Content>
-            <List>
-              <Card style={{
-                flex: 1
-              }}>
-                <CardItem>
-                  <TouchableOpacity onPress={() => Actions.MyCollections({image: user1})}>
-                    <View
-                      style={{
-                      flex: 1,
-                      marginRight: 10
-                    }}>
-                      <Thumbnail small source={user1}/>
-                    </View>
-                  </TouchableOpacity>
-                  <Body>
-                    <Text>Marek Janusz</Text>
-                    <Text note style={{
-                      fontSize: 12
-                    }}>12 listopada 2017</Text>
-                  </Body>
-
-                  <Right>
-                    <Text>
-                      11 minut temu
-                    </Text>
-                  </Right>
-                </CardItem>
-
-                <CardItem cardBody>
-                  <TouchableOpacity
+            <List
+              dataArray={this.state.todos}
+              renderRow={(item) => <Card style={{
+              flex: 1
+            }}>
+              <CardItem>
+                <TouchableOpacity onPress={() => Actions.MyCollections({image: user1})}>
+                  <View
                     style={{
+                    flex: 1,
+                    marginRight: 10
+                  }}>
+                    <Thumbnail small source={user1}/>
+                  </View>
+                </TouchableOpacity>
+                <Body>
+                  <Text>{this.getUserName(item.idusers)}</Text>
+                  <Text note style={{
+                    fontSize: 12
+                  }}>{Moment(item.dateupdate).format("DD.MM.YYYY")}</Text>
+                </Body>
+                <Right>
+                  <Text>
+                  {Moment(item.dateupdate).format("DD.MM.YYYY")}
+                  </Text>
+                </Right>
+              </CardItem>
+              <CardItem cardBody>
+                <TouchableOpacity
+                  style={{
+                  flex: 1
+                }}
+                  onPress={() => Actions.PostDetails({image: moneta1, user: user1})}>
+                  <View style={{
                     flex: 1
-                  }}
-                    onPress={() => Actions.PostDetails({image: moneta1, user: user1})}>
-                    <View style={{
-                      flex: 1
-                    }}>
-                      <Image
-                        resizeMethod={'scale'}
-                        resizeMode={'contain'}
-                        source={moneta1}
-                        style={{
-                        width: '95%',
-                        height: 200,
-                        alignSelf: 'center',
-                        flex: 1
-                      }}/>
-                    </View>
-                  </TouchableOpacity>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Button transparent>
-                      <Icon name="thumbs-up"/>
-                      <Text>12 Likes</Text>
-                    </Button>
-                  </Left>
-                  <Body>
-                    <Button transparent>
-                      <Icon active name="chatbubbles"/>
-                      <Text>4 Comments</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu neque
-                      gravida, euismod libero vel, auctor ligula.</Text>
-                  </Left>
-                </CardItem>
-              </Card>
-              <Card style={{
-                flex: 1
-              }}>
-                <CardItem>
-                  <TouchableOpacity onPress={() => Actions.MyCollections({image: user2})}>
-                    <View
+                  }}>
+                    <Image
+                      resizeMethod={'scale'}
+                      resizeMode={'contain'}
+                      source={{uri : item.image}}
                       style={{
-                      flex: 1,
-                      marginRight: 10
-                    }}>
-                      <Thumbnail small source={user2}/>
-                    </View>
-                  </TouchableOpacity>
-                  <Body>
-                    <Text>Asmir</Text>
-                    <Text note style={{
-                      fontSize: 12
-                    }}>12 listopada 2017</Text>
-                  </Body>
-
-                  <Right>
-                    <Text>
-                      20 minut temu
-                    </Text>
-                  </Right>
-                </CardItem>
-
-                <CardItem cardBody>
-                  <TouchableOpacity
-                    style={{
-                    flex: 1
-                  }}
-                    onPress={() => Actions.PostDetails({image: moneta2, user: user2})}>
-                    <View style={{
+                      width: '95%',
+                      height: 200,
+                      alignSelf: 'center',
                       flex: 1
-                    }}>
-                      <Image
-                        resizeMethod={'scale'}
-                        resizeMode={'contain'}
-                        source={moneta2}
-                        style={{
-                        width: '95%',
-                        height: 200,
-                        alignSelf: 'center',
-                        flex: 1
-                      }}/>
-                    </View>
-                  </TouchableOpacity>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Button transparent>
-                      <Icon name="thumbs-up"/>
-                      <Text>20 Likes</Text>
-                    </Button>
-                  </Left>
-                  <Body>
-                    <Button transparent>
-                      <Icon active name="chatbubbles"/>
-                      <Text>5 Comments</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu neque
-                      gravida, euismod libero vel, auctor ligula.</Text>
-                  </Left>
-                </CardItem>
-              </Card>
-              <Card style={{
-                flex: 1
-              }}>
-                <CardItem>
-                  <TouchableOpacity onPress={() => Actions.MyCollections({image: user3})}>
-                    <View
-                      style={{
-                      flex: 1,
-                      marginRight: 10
-                    }}>
-                      <Thumbnail small source={user3}/>
-                    </View>
-                  </TouchableOpacity>
-                  <Body>
-                    <Text>Amir</Text>
-                    <Text note style={{
-                      fontSize: 12
-                    }}>12 listopada 2017</Text>
-                  </Body>
-
-                  <Right>
-                    <Text>
-                      33 minut temu
-                    </Text>
-                  </Right>
-                </CardItem>
-
-                <CardItem cardBody>
-                  <TouchableOpacity
-                    style={{
-                    flex: 1
-                  }}
-                    onPress={() => Actions.PostDetails({image: moneta3, user: user3})}>
-                    <View style={{
-                      flex: 1
-                    }}>
-                      <Image
-                        resizeMethod={'scale'}
-                        resizeMode={'contain'}
-                        source={moneta3}
-                        style={{
-                        width: '95%',
-                        height: 200,
-                        alignSelf: 'center',
-                        flex: 1
-                      }}/>
-                    </View>
-                  </TouchableOpacity>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Button transparent>
-                      <Icon name="thumbs-up"/>
-                      <Text>33 Likes</Text>
-                    </Button>
-                  </Left>
-                  <Body>
-                    <Button transparent>
-                      <Icon active name="chatbubbles"/>
-                      <Text>44 Comments</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu neque
-                      gravida, euismod libero vel, auctor ligula.</Text>
-                  </Left>
-                </CardItem>
-              </Card>
-              <Card style={{
-                flex: 1
-              }}>
-                <CardItem>
-                  <TouchableOpacity onPress={() => Actions.MyCollections({image: user4})}>
-                    <View
-                      style={{
-                      flex: 1,
-                      marginRight: 10
-                    }}>
-                      <Thumbnail small source={user4}/>
-                    </View>
-                  </TouchableOpacity>
-                  <Body>
-                    <Text>Ahmed</Text>
-                    <Text note style={{
-                      fontSize: 12
-                    }}>12 listopada 2017</Text>
-                  </Body>
-                  <Right>
-                    <Text>
-                      41 minut temu
-                    </Text>
-                  </Right>
-                </CardItem>
-                <CardItem cardBody>
-                  <TouchableOpacity
-                    style={{
-                    flex: 1
-                  }}
-                    onPress={() => Actions.PostDetails({image: moneta4, user: user4})}>
-                    <View style={{
-                      flex: 1
-                    }}>
-                      <Image
-                        resizeMethod={'scale'}
-                        resizeMode={'contain'}
-                        source={moneta4}
-                        style={{
-                        width: '95%',
-                        height: 200,
-                        alignSelf: 'center',
-                        flex: 1
-                      }}/>
-                    </View>
-                  </TouchableOpacity>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Button transparent>
-                      <Icon name="thumbs-up"/>
-                      <Text>22 Likes</Text>
-                    </Button>
-                  </Left>
-                  <Body>
-                    <Button transparent>
-                      <Icon active name="chatbubbles"/>
-                      <Text>43 Comments</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu neque
-                      gravida, euismod libero vel, auctor ligula.</Text>
-                  </Left>
-                </CardItem>
-              </Card>
-              <Card style={{
-                flex: 1
-              }}>
-                <CardItem>
-                  <TouchableOpacity onPress={() => Actions.MyCollections({image: user5})}>
-                    <View
-                      style={{
-                      flex: 1,
-                      marginRight: 10
-                    }}>
-                      <Thumbnail small source={user5}/>
-                    </View>
-                  </TouchableOpacity>
-                  <Body>
-                    <Text>Hamir</Text>
-                    <Text note style={{
-                      fontSize: 12
-                    }}>12 listopada 2017</Text>
-                  </Body>
-
-                  <Right>
-                    <Text>
-                      55 minut temu
-                    </Text>
-                  </Right>
-                </CardItem>
-
-                <CardItem cardBody>
-                  <TouchableOpacity
-                    style={{
-                    flex: 1
-                  }}
-                    onPress={() => Actions.PostDetails({image: moneta5, user: user5})}>
-                    <View style={{
-                      flex: 1
-                    }}>
-                      <Image
-                        resizeMethod={'scale'}
-                        resizeMode={'contain'}
-                        source={moneta5}
-                        style={{
-                        width: '95%',
-                        height: 200,
-                        alignSelf: 'center',
-                        flex: 1
-                      }}/>
-                    </View>
-                  </TouchableOpacity>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Button transparent>
-                      <Icon name="thumbs-up"/>
-                      <Text>133 Likes</Text>
-                    </Button>
-                  </Left>
-                  <Body>
-                    <Button transparent>
-                      <Icon active name="chatbubbles"/>
-                      <Text>42 Comments</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Left>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu neque
-                      gravida, euismod libero vel, auctor ligula.</Text>
-                  </Left>
-                </CardItem>
-              </Card>
-            </List>
+                    }}/>
+                  </View>
+                </TouchableOpacity>
+              </CardItem>
+              <CardItem>
+                <Left>
+                  <Button transparent>
+                    <Icon active name="thumbs-up"/>
+                    <Text>{item.likes.length+" Likes"}</Text>
+                  </Button>
+                </Left>
+                <Body>
+                  <Button transparent>
+                    <Icon active name="chatbubbles"/>
+                    <Text>{item.comments.length+" Comments"}</Text>
+                  </Button>
+                </Body>
+              </CardItem>
+              <CardItem>
+                <Left>
+                  <Text>{item.description}</Text>
+                </Left>
+              </CardItem>
+            </Card>}></List>
           </Content>
         </Drawer>
       </Container>
@@ -442,6 +202,25 @@ class HomeScene extends Component {
       .drawer
       ._root
       .open();
+  };
+  getImage = () => {
+    firebase
+    .storage()
+    .ref('sktPo3TmvS2Do1a2fiZH.jpg')
+    .getDownloadURL()
+    .then((url) => {
+      this.setState({image :url});
+    });
+  };
+getUserName = (id) => {
+
+    firebase.firestore()
+  .doc('users/'+id.id)
+  .get()
+  .then(documentSnapshot => {
+    var user = documentSnapshot.data();
+  return user.firstname + " "+user.lastname;
+  });
   };
 }
 
