@@ -14,24 +14,18 @@ class ImagePlaceholder extends Component {
   }
 
   render() {
-      return (
-        this.props.source == null ? this.renderPlaceholder() : this.renderImage()
-      );
+    return this.props.source == null
+      ? this.renderPlaceholder()
+      : this.renderImage();
   }
 
   renderImage() {
     return (
       <TouchableOpacity onPress={() => this.props.onPress()}>
         <Image
-          resizeMode="contain"
+          resizeMode="cover"
           style={{ width: "100%", height: "100%" }}
-          source={
-            typeof this.props.source === "string"
-              ? {
-                  uri: this.props.source
-                }
-              : this.props.source
-          }
+          source={this.props.source}
         />
       </TouchableOpacity>
     );
@@ -45,10 +39,13 @@ class ImagePlaceholder extends Component {
             height: "100%",
             backgroundColor: "#666666",
             alignItems: "center",
-            justifyContent:"center"
+            justifyContent: "center",
+            alignContent: "center"
           }}
         >
-          <Text style={{color:"#fff", fontSize:30}}>{this.props.textPlaceholder}</Text>
+          <Text style={{ color: "#fff", fontSize: 30, textAlign: "center" }}>
+            {this.props.textPlaceholder}
+          </Text>
         </View>
       </TouchableOpacity>
     );

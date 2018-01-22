@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, View, Image } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  View,
+  Image,
+  Dimensions,
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView
+} from "react-native";
 import {
   Container,
   Header,
@@ -21,7 +30,7 @@ import {
 } from "native-base";
 import SideBar from "../components/SideBar";
 import ImagePicker from "react-native-image-picker";
-import ImagePlaceholder from '../components/ImagePlaceholder';
+import ImagePlaceholder from "../components/ImagePlaceholder";
 class SendScene extends Component {
   constructor(props) {
     super(props);
@@ -48,21 +57,55 @@ class SendScene extends Component {
             </Button>
           </Right>
         </Header>
-        <Drawer
-          ref={ref => {
-            this.drawer = ref;
-          }}
-          content={<SideBar />}
-          onClose={() => this.closeDrawer()}
-        >
-          <View style={{ backgroundColor: "#fff" }}>
-            <ImagePlaceholder
-              source={ this.state.image }
-              textPlaceholder="Wybierz zdjęcie"
-              onPress={()=>this.selectPhotoTapped()}
-            />
-          </View>
-        </Drawer>
+        <ScrollView contentContainerStyle={{width:"100%", height:"100%"}}>
+          <Drawer
+            ref={ref => {
+              this.drawer = ref;
+            }}
+            content={<SideBar />}
+            onClose={() => this.closeDrawer()}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#fff",
+                padding: 20,
+                alignItems: "center"
+              }}
+            >
+              <View
+                style={{
+                  width: Dimensions.get("window").width - 200,
+                  height: Dimensions.get("window").width - 200,
+                  backgroundColor: "#fff",
+                  alignSelf: "center",
+                  marginBottom:10
+                }}
+              >
+                <ImagePlaceholder
+                  source={this.state.image}
+                  textPlaceholder="Wybierz zdjęcie"
+                  onPress={() => this.selectPhotoTapped()}
+                />
+              </View>
+              <TextInput
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#000",
+                  borderRadius: 20,
+                  padding: 10,
+                  width:"100%",
+                  height:200,
+                  textAlignVertical:"top"
+                }}
+                multiline={true}
+                placeholder="Opis"
+                underlineColorAndroid="transparent"
+              />
+            </View>
+          </Drawer>
+        </ScrollView>
       </Container>
     );
   }
@@ -72,7 +115,7 @@ class SendScene extends Component {
   openDrawer = () => {
     this.drawer._root.open();
   };
-  selectPhotoTapped=()=> {
+  selectPhotoTapped = () => {
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -99,7 +142,7 @@ class SendScene extends Component {
         });
       }
     });
-  }
+  };
 }
 
 export default SendScene;
