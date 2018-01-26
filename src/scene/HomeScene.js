@@ -46,54 +46,78 @@ import {Actions} from 'react-native-router-flux';
 import ImageViewer from 'react-native-image-view';
 import firebase from 'react-native-firebase';
 import Moment from 'moment';
-const images = [
-  {
-    src: '../../img/moneta1.png'
-  }, {
-    url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-  }, {
-    url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-  }
-]
+import TimeAgo from 'javascript-time-ago'
+import pl from 'javascript-time-ago/locale/pl'
+TimeAgo.locale(pl)
+const timeAgo = new TimeAgo('pl-PL')
 class HomeScene extends Component {
   constructor(props) {
     super(props);
     this.ref = firebase
       .firestore()
       .collection('posts');
+    this.storage = firebase.storage();
     this.unsubscribe = null;
     this.state = {
       loading: true,
       todos: [],
-      image:null,
+      image: "",
+      name: ""
     };
   }
-  componentDidMount() {
+  componentDidMount(){
     this.unsubscribe = this
       .ref
       .onSnapshot(this.onCollectionUpdate)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(){
     this.unsubscribe();
   }
-  onCollectionUpdate = (querySnapshot) => {
+ onCollectionUpdate  =  async(querySnapshot)=>{
     const todos = [];
     querySnapshot.forEach((doc) => {
-      const {idusers, likes, comments, description, dateupdate} = doc.data();
-      todos.push({
-        key: doc.id,
+      const {
         idusers,
         likes,
         comments,
         description,
         dateupdate,
+        link,
+        avatar
+      } = doc.data();
+      
+      firebase
+      .storage()
+      .ref('sktPo3TmvS2Do1a2fiZH.jpg')
+      .getDownloadURL()
+      .then((url) => {
+        firebase
+        .firestore()
+        .doc('users/' + idusers.id)
+        .get()
+        .then((documentSnapshot) => {
+          var user = documentSnapshot.data();
+          todos.push({
+            key: doc.id,
+            idusers,
+            name: user.firstname + " " + user.lastname,
+            likes,
+            link : url,
+            comments,
+            description,
+            dateupdate,
+            avatar,
+        });
       });
 
     });
-
+   
+     
+     
+         
+    });
     this.setState({todos, loading: false});
-   // console.log(this.state.todos);
   }
   render() {
     return (
@@ -129,18 +153,22 @@ class HomeScene extends Component {
                     flex: 1,
                     marginRight: 10
                   }}>
-                    <Thumbnail small source={user1}/>
+                    <Thumbnail
+                      small
+                      source={{
+                      uri: item.avatar
+                    }}/>
                   </View>
                 </TouchableOpacity>
                 <Body>
-                  <Text>{this.getUserName(item.idusers)}</Text>
+                  <Text>{item.name}</Text>
                   <Text note style={{
                     fontSize: 12
                   }}>{Moment(item.dateupdate).format("DD.MM.YYYY")}</Text>
                 </Body>
                 <Right>
                   <Text>
-                  {Moment(item.dateupdate).format("DD.MM.YYYY")}
+                    {timeAgo.format(item.dateupdate)}
                   </Text>
                 </Right>
               </CardItem>
@@ -149,14 +177,16 @@ class HomeScene extends Component {
                   style={{
                   flex: 1
                 }}
-                  onPress={() => Actions.PostDetails({image: moneta1, user: user1})}>
+                  onPress={() => Actions.PostDetails({image: item.link, user: item.name})}>
                   <View style={{
                     flex: 1
                   }}>
                     <Image
                       resizeMethod={'scale'}
                       resizeMode={'contain'}
-                      source={{uri : item.image}}
+                      source={{
+                      uri: item.link
+                    }}
                       style={{
                       width: '95%',
                       height: 200,
@@ -170,13 +200,13 @@ class HomeScene extends Component {
                 <Left>
                   <Button transparent>
                     <Icon active name="thumbs-up"/>
-                    <Text>{item.likes.length+" Likes"}</Text>
+                    <Text>{item.likes.length + " Likes"}</Text>
                   </Button>
                 </Left>
                 <Body>
                   <Button transparent>
                     <Icon active name="chatbubbles"/>
-                    <Text>{item.comments.length+" Comments"}</Text>
+                    <Text>{item.comments.length + " Comments"}</Text>
                   </Button>
                 </Body>
               </CardItem>
@@ -203,25 +233,25 @@ class HomeScene extends Component {
       ._root
       .open();
   };
-  getImage = () => {
+  getImage(){
+    this
+      .storage
+      .ref('sktPo3TmvS2Do1a2fiZH.jpg')
+      .getDownloadURL()
+      .then((url) => {
+        return  url;
+      });
+  };
+  getUserName(id){
     firebase
-    .storage()
-    .ref('sktPo3TmvS2Do1a2fiZH.jpg')
-    .getDownloadURL()
-    .then((url) => {
-      this.setState({image :url});
-    });
-  };
-getUserName = (id) => {
-
-    firebase.firestore()
-  .doc('users/'+id.id)
-  .get()
-  .then(documentSnapshot => {
-    var user = documentSnapshot.data();
-  return user.firstname + " "+user.lastname;
-  });
-  };
+      .firestore()
+      .doc('users/' + id)
+      .get()
+      .then((documentSnapshot) => {
+       return documentSnapshot.data();
+     
+      });
+  }
 }
 
 export default HomeScene;
