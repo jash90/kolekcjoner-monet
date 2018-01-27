@@ -20,10 +20,7 @@ import {
   List
 } from "native-base";
 import SideBar from "../components/SideBar";
-import user from "../img/logo.png";
-import collection from "../img/drawer-cover.png";
 import firebase from "react-native-firebase";
-var items = ["Bartek", "Justyna", "Rafał", "Marek", "Wojtek"];
 class FriendsScene extends Component {
   constructor(props) {
     super(props);

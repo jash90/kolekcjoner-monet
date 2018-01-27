@@ -1,5 +1,12 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Image} from 'react-native'
+import React, { Component } from "react";
+import {
+  Platform,
+  StyleSheet,
+  View,
+  Image,
+  Modal,
+  TouchableOpacity
+} from "react-native";
 import {
   Container,
   Header,
@@ -19,94 +26,107 @@ import {
   CardItem,
   Thumbnail,
   List
-} from 'native-base';
-import SideBar from '../components/SideBar';
-import user from '../img/logo.png';
-import collection from '../img/drawer-cover.png';
-var items = ['sdfs', '123', 'shdfgsjd'];
+} from "native-base";
+import SideBar from "../components/SideBar";
+import { Actions } from "react-native-router-flux";
+import ImageViewer from "react-native-image-view";
+import firebase from "react-native-firebase";
+import Moment from "moment";
+import TimeAgo from "javascript-time-ago";
+import pl from "javascript-time-ago/locale/pl";
+TimeAgo.locale(pl);
+const timeAgo = new TimeAgo("pl-PL");
 class FavoritesScene extends Component {
+  constructor(props) {
+    super(props);
+    this.ref = firebase.firestore().collection("favorites");
+    this.storage = firebase.storage();
+    this.unsubscribe = null;
+    this.state = {
+      loading: true,
+      posts: [],
+      image: "",
+      name: ""
+    };
+  }
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  onCollectionUpdate = querySnapshot => {
+    const posts = [];
+    firebase.firestore().doc("favorites/NbcZVRCcpRWAjOsx47L7CJArCH83").get().then((fav)=>{
+      var ff = fav.data();
+      console.log(fav.data().posts);
+     
+    });
+   
+  };
   render() {
-    return (
-      <Container>
-        <Header >
+    return <Container>
+        <Header>
           <Left>
-            <Button transparent onPress={() => this.openDrawer()}><Icon name={'ios-menu'} style={{
-        color: '#fff'
-      }}/></Button>
+            <Button transparent onPress={() => this.openDrawer()}>
+              <Icon name={"ios-menu"} style={{ color: "#fff" }} />
+            </Button>
           </Left>
           <Body>
-            <Text style={{
-              color: '#fff'
-            }}>Ulubione Monety</Text>
+            <Text style={{ color: "#fff" }}>Ulubione Monety</Text>
           </Body>
         </Header>
-        <Drawer
-          ref={(ref) => {
-          this.drawer = ref;
-        }}
-          content={< SideBar />}
-          onClose={() => this.closeDrawer()}>
+        <Drawer ref={ref => {
+            this.drawer = ref;
+          }} content={<SideBar />} onClose={() => this.closeDrawer()}>
           <Content>
-            <List
-              dataArray={items}
-              renderRow={(item) => <Card style={{
-              flex: 0
-            }}>
-              <CardItem>
-                <Left>
-                  <Thumbnail source={user}/>
-                  <Body>
-                    <Text>NativeBase</Text>
-                    <Text note>April 15, 2016</Text>
-                  </Body>
-                </Left>
-                <Right>
-                  <Text>11h ago</Text>
-                </Right>
-              </CardItem>
-              <CardItem cardBody>
-                <Body>
-                  <Image
-                    source={collection}
-                    style={{
-                    width: '95%',
-                    height: 200,
-                    alignSelf: 'center',
-                    flex: 1
-                  }}/>
-                </Body>
-              </CardItem>
-              <CardItem>
-                <Left>
-                  <Button transparent>
-                    <Icon active name="thumbs-up"/>
-                    <Text>12 Likes</Text>
-                  </Button>
-                </Left>
-                <Body>
-                  <Button transparent>
-                    <Icon active name="chatbubbles"/>
-                    <Text>4 Comments</Text>
-                  </Button>
-                </Body>
-              </CardItem>
-            </Card>}/>
+            <List dataArray={this.state.posts} renderRow={item => <Card style={{ flex: 0 }}>
+                  <CardItem>
+                    <Left>
+                      <Thumbnail source={{ uri: item.user.link }} />
+                      <Body>
+                        <Text>
+                          {item.user.firstname + " " + item.user.lastname}
+                        </Text>
+                        <Text note>
+                          {Moment(item.dateupdate).format("DD.MM.YYYY")}
+                        </Text>
+                      </Body>
+                    </Left>
+                    <Right>
+                      <Text>{timeAgo.format(item.dateupdate)}</Text>
+                    </Right>
+                  </CardItem>
+                  <CardItem cardBody>
+                    <Body>
+                      <Image source={{uri:item.link}} style={{ width: "95%", height: 200, alignSelf: "center", flex: 1 }} />
+                    </Body>
+                  </CardItem>
+                  <CardItem>
+                    <Left>
+                      <Button transparent>
+                        <Icon active name="thumbs-up" />
+                        <Text>{item.likes.length+" Likes"}</Text>
+                      </Button>
+                    </Left>
+                    <Body>
+                      <Button transparent>
+                        <Icon active name="chatbubbles" />
+                        <Text>{item.comments.length+" Comments"}</Text>
+                      </Button>
+                    </Body>
+                  </CardItem>
+                </Card>} />
           </Content>
         </Drawer>
-      </Container>
-    );
+      </Container>;
   }
   closeDrawer = () => {
-    this
-      .drawer
-      ._root
-      .close();
+    this.drawer._root.close();
   };
   openDrawer = () => {
-    this
-      .drawer
-      ._root
-      .open();
+    this.drawer._root.open();
   };
 }
 

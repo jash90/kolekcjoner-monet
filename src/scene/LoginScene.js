@@ -1,5 +1,11 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, View, TouchableOpacity, ToastAndroid} from 'react-native'
+import React, { Component } from "react";
+import {
+  Platform,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ToastAndroid
+} from "react-native";
 import {
   Container,
   Header,
@@ -14,84 +20,93 @@ import {
   Left,
   Text,
   Drawer
-} from 'native-base';
-import {Actions} from 'react-native-router-flux';
-import ModalLoading from '../components/ModalLoading';
-import firebase  from 'react-native-firebase';
+} from "native-base";
+import { Actions } from "react-native-router-flux";
+import ModalLoading from "../components/ModalLoading";
+import firebase from "react-native-firebase";
 class LoginScene extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
-      login:'rafal@gg.pl',
-      password:'123456',
+    this.state = {
+      login: "rafal@gg.pl",
+      password: "123456",
       loading: false,
-      error:""
-      
-    }
+      error: ""
+    };
   }
   render() {
     return (
       <Container>
         <Header>
           <Body>
-            <Text style={{
-              color: '#fff'
-            }}>Kolekcjoner Monet</Text>
+            <Text
+              style={{
+                color: "#fff"
+              }}
+            >
+              Kolekcjoner Monet
+            </Text>
           </Body>
         </Header>
         <View
           style={{
-          margin: 16,
-          justifyContent: 'space-around'
-        }}>
-          <Body style={{
-            margin: 20
-          }}>
-            <Text >Logowanie</Text>
+            margin: 16,
+            justifyContent: "space-around"
+          }}
+        >
+          <Body
+            style={{
+              margin: 20
+            }}
+          >
+            <Text>Logowanie</Text>
           </Body>
           <Form>
             <Item floatingLabel>
               <Label>Login</Label>
-              <Input value={this.state.login} onChangeText={(text)=>this.setState({login:text})}/>
+              <Input
+                value={this.state.login}
+                onChangeText={text => this.setState({ login: text })}
+              />
             </Item>
             <Item floatingLabel last>
               <Label>Hasło</Label>
-              <Input value={this.state.password} secureTextEntry={true} onChangeText={(text)=>this.setState({password:text})}/>
+              <Input
+                value={this.state.password}
+                secureTextEntry={true}
+                onChangeText={text => this.setState({ password: text })}
+              />
             </Item>
           </Form>
-          <ModalLoading
-            text={"Logowanie..."}
-            visible={this.state.loading}
-          />
+          <ModalLoading text={"Logowanie..."} visible={this.state.loading} />
           <Button
             block
             style={{
-            marginTop: 10,
-            marginBottom: 10
-          }}
-          onPress={()=> this.onLogin()}
-           >
-            <Text>
-              Zaloguj
-            </Text>
+              marginTop: 10,
+              marginBottom: 10
+            }}
+            onPress={() => this.onLogin()}
+          >
+            <Text>Zaloguj</Text>
           </Button>
-          <Button block onPress={()=> Actions.RegisterScene()}>
-            <Text>
-              Zarejestruj
-            </Text>
+          <Button block onPress={() => Actions.RegisterScene()}>
+            <Text>Zarejestruj</Text>
           </Button>
         </View>
       </Container>
     );
   }
-  onLogin=()=>{
-    this.setState({loading:true});
+  onLogin = () => {
+    this.setState({ loading: true });
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.login, this.state.password)
-      .then((data) => {
-       // alert(JSON.stringify(data));
-        ToastAndroid.show("Zalogowałes sie jako "+ data.email+" .", ToastAndroid.SHORT);
+      .then(data => {
+        //alert(JSON.stringify(data));
+        ToastAndroid.show(
+          "Zalogowałes sie jako " + data.email + " .",
+          ToastAndroid.SHORT
+        );
         Actions.HomeScene();
         this.setState({ error: "", loading: false });
       })
@@ -99,7 +114,7 @@ class LoginScene extends Component {
         this.setState({ error: "Authentication failed.", loading: false });
         ToastAndroid.show(error.message, ToastAndroid.SHORT);
       });
-  }
+  };
 }
 
 export default LoginScene;
