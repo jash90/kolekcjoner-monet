@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   ToastAndroid,
-  AsyncStorage
+  AsyncStorage,
+  Switch
 } from "react-native";
 import {
   Container,
@@ -32,42 +33,39 @@ class LoginScene extends Component {
       login: "rafal@gg.pl",
       password: "123456",
       loading: false,
-      error: ""
+      error: "",
+      autologin: false
     };
   }
-  async saveUserID(id){
+  async saveUserID(id) {
     try {
-   //  alert(JSON.stringify(id));
-       await AsyncStorage.setItem('@UserId:key', id);
+      //  alert(JSON.stringify(id));
+      await AsyncStorage.setItem("@UserId:key", id);
     } catch (error) {
       console.log(error);
     }
+  }
+  async saveAutoLogin(autologin) {
+    try {
+      //  alert(JSON.stringify(id));
+      await AsyncStorage.setItem("@AutoLogin:key", id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async componentWillMount() {
+    
   }
   render() {
     return (
       <Container>
         <Header>
           <Body>
-            <Text
-              style={{
-                color: "#fff"
-              }}
-            >
-              Kolekcjoner Monet
-            </Text>
+            <Text style={{ color: "#fff" }}>Kolekcjoner Monet</Text>
           </Body>
         </Header>
-        <View
-          style={{
-            margin: 16,
-            justifyContent: "space-around"
-          }}
-        >
-          <Body
-            style={{
-              margin: 20
-            }}
-          >
+        <View style={{ margin: 16, justifyContent: "space-around" }}>
+          <Body style={{ margin: 20 }}>
             <Text>Logowanie</Text>
           </Body>
           <Form>
@@ -88,12 +86,20 @@ class LoginScene extends Component {
             </Item>
           </Form>
           <ModalLoading text={"Logowanie..."} visible={this.state.loading} />
+          <View
+            style={{ flexDirection: "row", marginTop: 20, marginBottom: 10 }}
+          >
+            <Switch
+              value={this.state.autologin}
+              onValueChange={value => this.onChangeAutoLogin(value)}
+              onTintColor="#6f7ab1"
+              thumbTintColor="#324190"
+            />
+            <Text>{"Pozostań zalogowany"}</Text>
+          </View>
           <Button
             block
-            style={{
-              marginTop: 10,
-              marginBottom: 10
-            }}
+            style={{ marginTop: 10, marginBottom: 10 }}
             onPress={() => this.onLogin()}
           >
             <Text>Zaloguj</Text>
@@ -104,6 +110,9 @@ class LoginScene extends Component {
         </View>
       </Container>
     );
+  }
+  onChangeAutoLogin(value) {
+    this.setState({ autologin: value });
   }
   onLogin = () => {
     this.setState({ loading: true });
