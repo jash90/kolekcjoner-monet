@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View} from 'react-native'
+import {Platform, StyleSheet, View, AsyncStorage} from 'react-native'
 import {
   Container,
   Header,
@@ -19,11 +19,33 @@ import {
   Switch
 } from 'native-base';
 import {Actions} from 'react-native-router-flux';
-var items = ['dolar', 'euro', 'zloty'];
+import firebase from 'react-native-firebase';
 class SideBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      userId: null,
+      user: null
+    };
+  }
+  async componentWillMount() {
+    try {
+      const value = await AsyncStorage.getItem('@UserId:key');
+      if (value !== null){
+        this.setState({userId:value});
+        firebase.firestore().doc("users/"+value).get().then((u)=>{
+          var user = u.data();
+          user.id = u.id;
+          firebase.storage().ref(u.id+".jpg").getDownloadURL()
+          .then(url => {
+            user.link = url;
+            this.setState({ user });
+          });
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   render() {
     return <Container>
@@ -55,7 +77,7 @@ class SideBar extends Component {
               </Body>
             </ListItem>
             <ListItem itemDivider />
-            <ListItem icon onPress={() => Actions.MyCollections()}>
+            <ListItem icon onPress={() => Actions.MyCollections({user: this.state.user})}>
               <Left>
                 <Icon name="ios-contact" />
               </Left>

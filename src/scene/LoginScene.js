@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  ToastAndroid
+  ToastAndroid,
+  AsyncStorage
 } from "react-native";
 import {
   Container,
@@ -33,6 +34,14 @@ class LoginScene extends Component {
       loading: false,
       error: ""
     };
+  }
+  async saveUserID(id){
+    try {
+   //  alert(JSON.stringify(id));
+       await AsyncStorage.setItem('@UserId:key', id);
+    } catch (error) {
+      console.log(error);
+    }
   }
   render() {
     return (
@@ -102,7 +111,7 @@ class LoginScene extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.login, this.state.password)
       .then(data => {
-        //alert(JSON.stringify(data));
+        this.saveUserID(data.uid);
         ToastAndroid.show(
           "Zalogowałes sie jako " + data.email + " .",
           ToastAndroid.SHORT

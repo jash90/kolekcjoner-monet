@@ -5,7 +5,8 @@ import {
   View,
   Image,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from "react-native";
 import {
   Container,
@@ -49,7 +50,7 @@ class HomeScene extends Component {
       name: ""
     };
   }
-  componentDidMount() {
+ async componentDidMount() {
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
   }
 
@@ -127,7 +128,6 @@ class HomeScene extends Component {
                     <TouchableOpacity
                       onPress={() =>
                         Actions.MyCollections({
-                          image: item.user.link,
                           user: item.user
                         })
                       }

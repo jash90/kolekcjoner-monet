@@ -54,7 +54,6 @@ class PhotoGrid extends Component {
 
     }
     renderPhotoRow1(row) {
-        console.log('row', row);
         return (
             <View style={styles.alignCenter}>
                 {row.map((item, index) => {
