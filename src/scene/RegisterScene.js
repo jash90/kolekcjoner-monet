@@ -29,10 +29,10 @@ class LoginScene extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: 'rafal',
-            email: 'rafal@gg.pl',
-            password: '123456',
-            repeatpassword: '123456',
+            login: '',
+            email: '',
+            password: '',
+            repeatpassword: '',
             error: '',
             loading: false
         }
@@ -96,10 +96,7 @@ class LoginScene extends Component {
                             Zarejestruj
                         </Text>
                     </Button>
-                    <ModalLoading
-                        visible={this.state.loading}
-                        text={"Rejestracja..."}
-                    />
+                    <ModalLoading visible={this.state.loading} text={"Rejestracja..."}/>
                 </View>
             </Container>
         );

@@ -40,6 +40,7 @@ class SideBar extends Component {
           .then(url => {
             user.link = url;
             this.setState({ user });
+            console.log(user);
           });
         });
       }
@@ -51,7 +52,7 @@ class SideBar extends Component {
     return <Container>
         <Content style={{ backgroundColor: "#fff" }}>
           <List>
-            <ListItem icon onPress={() => Actions.HomeScene()}>
+            <ListItem icon onPress={() => Actions.SendScene({user: this.state.user})}>
               <Left>
                 < Icon name = "ios-send" />
               </Left>

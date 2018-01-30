@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Platform, StyleSheet, View, Image } from "react-native";
+import React, {Component} from "react";
+import {Platform, StyleSheet, View, Image} from "react-native";
 import {
   Container,
   Header,
@@ -27,12 +27,16 @@ class FriendsScene extends Component {
     this.state = {
       followers: []
     };
-    this.ref = firebase.firestore().collection("followers");
+    this.ref = firebase
+      .firestore()
+      .collection("followers");
     this.storage = firebase.storage();
     this.unsubscribe = null;
   }
   componentDidMount() {
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+    this.unsubscribe = this
+      .ref
+      .onSnapshot(this.onCollectionUpdate);
   }
 
   componentWillUnmount() {
@@ -45,15 +49,17 @@ class FriendsScene extends Component {
       .doc("followers/NbcZVRCcpRWAjOsx47L7CJArCH83")
       .get()
       .then(doc => {
-        const { users } = doc.data();
+        const {users} = doc.data();
         users.forEach(user => {
-         user.get().then(e => {
-            followers.push(e.data());
-                 this.setState({ followers });
-          });
+          user
+            .get()
+            .then(e => {
+              followers.push(e.data());
+              this.setState({followers});
+            });
         });
       });
-     
+
   };
 
   render() {
@@ -65,81 +71,75 @@ class FriendsScene extends Component {
               <Icon
                 name={"ios-menu"}
                 style={{
-                  color: "#fff"
-                }}
-              />
+                color: "#fff"
+              }}/>
             </Button>
           </Left>
           <Body>
-            <Text
-              style={{
-                color: "#fff"
-              }}
-            >
+            <Text style={{
+              color: "#fff"
+            }}>
               Znajomi
             </Text>
           </Body>
         </Header>
         <Drawer
           ref={ref => {
-            this.drawer = ref;
-          }}
-          content={<SideBar />}
-          onClose={() => this.closeDrawer()}
-        >
-          <Content
-            style={{
-              backgroundColor: "#fff"
-            }}
-          >
+          this.drawer = ref;
+        }}
+          content={< SideBar />}
+          onClose={() => this.closeDrawer()}>
+          <Content style={{
+            backgroundColor: "#fff"
+          }}>
             <List
               dataArray={this.state.followers}
               renderRow={(item) => (
+              <View
+                style={{
+                justifyContent: "center",
+                flexDirection: "row",
+                alignSelf: "flex-start"
+              }}>
+                <View style={{
+                  justifyContent: "center"
+                }}>
+                  <Icon
+                    name={"ios-contact"}
+                    style={{
+                    fontSize: 60,
+                    marginLeft: 10,
+                    marginRight: 10
+                  }}/>
+                </View>
                 <View
                   style={{
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    alignSelf: "flex-start"
-                  }}
-                >
-                  <View
-                    style={{
-                      justifyContent: "center"
-                    }}
-                  >
-                    <Icon
-                      name={"ios-contact"}
-                      style={{
-                        fontSize: 60,
-                        marginLeft: 10,
-                        marginRight: 10
-                      }}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      alignItems: "flex-start",
-                      justifyContent: "center"
-                    }}
-                  >
-                    <Text>{item.firstname +" "+ item.lastname}</Text>
-                    <Text note>
-                     {"Miasto: "+item.city+" Email: "+item.email}
-                    </Text>
-                  </View>
+                  alignItems: "flex-start",
+                  justifyContent: "center"
+                }}>
+                  <Text>{item.firstname + " " + item.lastname}</Text>
+                  <Text note>
+                    {"Miasto: " + item.city + " Email: " + item.email}
+                  </Text>
                 </View>
-              )}
-            />
+              </View>
+            )}/>
           </Content>
         </Drawer>
       </Container>
     );
   }
   closeDrawer = () => {
-    this.drawer._root.close();
+    this
+      .drawer
+      ._root
+      .close();
   };
   openDrawer = () => {
-    this.drawer._root.open();
+    this
+      .drawer
+      ._root
+      .open();
   };
 }
 

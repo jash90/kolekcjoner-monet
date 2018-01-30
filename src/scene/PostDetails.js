@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {
   Platform,
   StyleSheet,
@@ -28,7 +28,7 @@ import {
   List
 } from "native-base";
 import SideBar from "../components/SideBar";
-import { Actions } from "react-native-router-flux";
+import {Actions} from "react-native-router-flux";
 import ImageViewer from "react-native-image-view";
 import TimeAgo from "javascript-time-ago";
 import pl from "javascript-time-ago/locale/pl";
@@ -42,35 +42,43 @@ class HomeScene extends Component {
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name={"ios-menu"} style={{ color: "#fff" }} />
+              <Icon
+                name={"ios-menu"}
+                style={{
+                color: "#fff"
+              }}/>
             </Button>
           </Left>
           <Body>
-            <Text style={{ color: "#fff" }}>Kolekcjoner Monet</Text>
+            <Text style={{
+              color: "#fff"
+            }}>Kolekcjoner Monet</Text>
           </Body>
         </Header>
         <Drawer
           ref={ref => {
-            this.drawer = ref;
-          }}
-          content={<SideBar />}
-          onClose={() => this.closeDrawer()}
-        >
+          this.drawer = ref;
+        }}
+          content={< SideBar />}
+          onClose={() => this.closeDrawer()}>
           <Content>
-            <Card style={{ flex: 1 }}>
+            <Card style={{
+              flex: 1
+            }}>
               <CardItem>
                 <Left>
                   <Thumbnail
                     small
-                    source={{ uri: this.props.post.user.link }}
-                  />
+                    source={{
+                    uri: this.props.post.user.link
+                  }}/>
                   <Body>
                     <Text>
-                      {this.props.post.user.firstname +
-                        " " +
-                        this.props.post.user.lastname}
+                      {this.props.post.user.firstname + " " + this.props.post.user.lastname}
                     </Text>
-                    <Text note style={{ fontSize: 12 }}>
+                    <Text note style={{
+                      fontSize: 12
+                    }}>
                       {Moment(this.props.post.dateupdate).format("DD.MM.YYYY")}
                     </Text>
                   </Body>
@@ -84,26 +92,27 @@ class HomeScene extends Component {
                   <Image
                     resizeMethod={"scale"}
                     resizeMode={"contain"}
-                    source={{ uri: this.props.post.link }}
+                    source={{
+                    uri: this.props.post.link
+                  }}
                     style={{
-                      width: "95%",
-                      height: 200,
-                      alignSelf: "center",
-                      flex: 1
-                    }}
-                  />
+                    width: "95%",
+                    height: 200,
+                    alignSelf: "center",
+                    flex: 1
+                  }}/>
                 </Body>
               </CardItem>
               <CardItem>
                 <Left>
                   <Button transparent>
-                    <Icon active name="thumbs-up" />
+                    <Icon active name="thumbs-up"/>
                     <Text>{this.props.post.likes.length + " Likes"}</Text>
                   </Button>
                 </Left>
                 <Body>
                   <Button transparent>
-                    <Icon active name="chatbubbles" />
+                    <Icon active name="chatbubbles"/>
                     <Text>{this.props.post.comments.length + " Comments"}</Text>
                   </Button>
                 </Body>
@@ -117,30 +126,35 @@ class HomeScene extends Component {
                 <Left>
                   <Thumbnail
                     small
-                    source={{ uri: this.props.post.user.link }}
-                    style={{ marginRight: 10 }}
-                  />
+                    source={{
+                    uri: this.props.post.user.link
+                  }}
+                    style={{
+                    marginRight: 10
+                  }}/>
                   <Input
                     placeholder={"Dodaj Komentarz..."}
-                    style={{ backgroundColor: "#fafafa", borderRadius: 20 }}
-                  />
+                    style={{
+                    backgroundColor: "#fafafa",
+                    borderRadius: 20
+                  }}/>
                 </Left>
               </CardItem>
               <List
                 dataArray={this.props.post.comments}
                 renderRow={item => (
-                  <CardItem>
-                    <Left>
-                      <Thumbnail
-                        small
-                        source={item.link}
-                        style={{ marginRight: 10 }}
-                      />
-                      <Text>{item.text}</Text>
-                    </Left>
-                  </CardItem>
-                )}
-              />
+                <CardItem>
+                  <Left>
+                    <Thumbnail
+                      small
+                      source={item.link}
+                      style={{
+                      marginRight: 10
+                    }}/>
+                    <Text>{item.text}</Text>
+                  </Left>
+                </CardItem>
+              )}/>
             </Card>
           </Content>
         </Drawer>
@@ -148,10 +162,16 @@ class HomeScene extends Component {
     );
   }
   closeDrawer = () => {
-    this.drawer._root.close();
+    this
+      .drawer
+      ._root
+      .close();
   };
   openDrawer = () => {
-    this.drawer._root.open();
+    this
+      .drawer
+      ._root
+      .open();
   };
 }
 
