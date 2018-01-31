@@ -42,7 +42,7 @@ class HomeScene extends Component {
     super(props);
     this.ref = firebase
       .firestore()
-      .collection("posts");
+      .collection("posts").orderBy("dateupdate","desc");
     this.storage = firebase.storage();
     this.unsubscribe = null;
     this.state = {
@@ -61,7 +61,8 @@ class HomeScene extends Component {
   componentWillUnmount() {
     this.unsubscribe();
   }
-  onCollectionUpdate = querySnapshot => {
+  onCollectionUpdate = (querySnapshot) => {
+    console.log(querySnapshot);
     const posts = [];
     querySnapshot.forEach(doc => {
       var post = doc.data();

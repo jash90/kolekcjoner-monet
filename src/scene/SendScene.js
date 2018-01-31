@@ -32,14 +32,17 @@ import SideBar from "../components/SideBar";
 import ImagePicker from "react-native-image-picker";
 import ImagePlaceholder from "../components/ImagePlaceholder";
 import firebase from 'react-native-firebase';
-import Moment from 'moment';
+import ModalLoading from '../components/ModalLoading';
+import {Actions} from "react-native-router-flux";
 class SendScene extends Component {
   constructor(props) {
     super(props);
     this.state = {
       image: null,
       uri: null,
-      user : null
+      user : null,
+      description: '',
+      visible:false
     };
     this.ref = firebase
     .firestore()
@@ -120,9 +123,15 @@ class SendScene extends Component {
                 height: 200,
                 textAlignVertical: "top"
               }}
+              value={this.state.description}
+              onChangeText={(value)=>this.setState({description:value})}
                 multiline={true}
                 placeholder="Opis"
                 underlineColorAndroid="transparent"/>
+                <ModalLoading
+                text="Wysyłanie"
+                visible={this.state.visible}
+                />
             </View>
           </Drawer>
         </ScrollView>
@@ -169,29 +178,39 @@ class SendScene extends Component {
     });
   };
   sendImage = () => {
+    this.setState({visible:true});
+    console.log("USER : "+this.props.user.id);
     var user = firebase.firestore().doc("users/" + this.props.user.id);
+    console.log("ref :"+user);
     this.ref.add({
-      description : "opis",
+      description : this.state.description,
       likes:[],
       comments :[],
-      dateupdate : Moment(),
+      dateupdate : new Date(),
+      idusers : user
 
     }).then((response)=>{
-      console.log(response.doc());
-    }).catch((error)=>{
-      console.log(error);
-    });
-    firebase
+      response.get().then((value)=>{
+          firebase
       .storage()
-      .ref('/uploadOk.jpeg')
+      .ref('/'+value.id+'.jpg')
       .putFile(this.state.image.path)
       .then((successCb) => {
         console.log(successCb);
+        this.setState({visible:false});
+        Actions.HomeScene();
       })
       .catch((failureCb) => {
         console.log(failureCb);
+        this.setState({visible:false});
       });
-  }
+      });
+    }).catch((error)=>{
+      console.log(error);
+      this.setState({visible:false});
+    });
+  
+}
 }
 
 export default SendScene;
