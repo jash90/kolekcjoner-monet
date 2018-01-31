@@ -25,6 +25,7 @@ import {
 import firebase from 'react-native-firebase';
 import {Actions} from 'react-native-router-flux';
 import ModalLoading from '../components/ModalLoading';
+
 class LoginScene extends Component {
     constructor(props) {
         super(props);
@@ -37,26 +38,27 @@ class LoginScene extends Component {
             loading: false
         }
     }
+
     render() {
         return (
             <Container>
                 <Header>
                     <Body>
-                        <Text
-                            style={{
+                    <Text
+                        style={{
                             color: '#fff'
                         }}>Kolekcjoner Monet</Text>
                     </Body>
                 </Header>
                 <View
                     style={{
-                    margin: 16,
-                    justifyContent: 'space-around'
-                }}>
+                        margin: 16,
+                        justifyContent: 'space-around'
+                    }}>
                     <Body style={{
                         margin: 20
                     }}>
-                        <Text >Rejestracja</Text>
+                    <Text>Rejestracja</Text>
                     </Body>
                     <Form>
                         <Item floatingLabel>
@@ -89,8 +91,8 @@ class LoginScene extends Component {
                     <Button
                         block
                         style={{
-                        marginTop: 20
-                    }}
+                            marginTop: 20
+                        }}
                         onPress={() => this.onRegister()}>
                         <Text>
                             Zarejestruj
@@ -101,6 +103,7 @@ class LoginScene extends Component {
             </Container>
         );
     }
+
     onRegister() {
         if (this.state.login === '') {
             alert('Podaj Login');

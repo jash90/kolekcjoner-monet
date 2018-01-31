@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {View, Modal, ActivityIndicator, Text, StyleSheet} from 'react-native';
+
 class ModalLoading extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         return (
             <Modal visible={this.props.visible} transparent={true}>
