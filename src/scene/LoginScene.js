@@ -175,8 +175,10 @@ class LoginScene extends Component {
                     .get()
                     .then((value) => {
                         console.log(value);
+                        var user = value.data();
+                        user.id = value.id;
                         Actions.HomeScene({
-                            user: value.data()
+                            user
                         });
                         this.setState({error: "", loading: false});
                     });

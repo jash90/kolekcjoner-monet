@@ -194,7 +194,7 @@ class HomeScene extends Component {
                   </CardItem>
                   <CardItem>
                     <Left>
-                      <Button transparent onPress={() => item.likes.push(this.props.user.id)}>
+                      <Button transparent onPress={() => this.toggleLike(item, this.props.user.id)}>
                         <Icon
                           name={item
                           .likes
@@ -236,14 +236,29 @@ class HomeScene extends Component {
       ._root
       .open();
   };
-  AddLike = (idpost, iduser) => {
+  toggleLike = (item, iduser) => {
+    //
+    if (item.likes.includes(iduser)) {
+      item
+        .likes
+        .splice(item.likes.indexOf(iduser), 1);
+    } else {
+      item
+        .likes
+        .push(iduser);
+    }
+    var likes = item.likes;
     firebase
       .firestore()
-      .doc("posts/" + idpost + "/" + likes)
+      .collection("posts")
+      .doc(item.id)
       .get()
-      .then((value) => {
-        console.log(value);
-      })
+      .then((doc) => {
+        doc
+          .ref
+          .update({likes});
+
+      });
   }
 }
 
