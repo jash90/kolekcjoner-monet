@@ -18,9 +18,11 @@ class ImagePlaceholder extends Component {
             <TouchableOpacity onPress={() => this.props.onPress()}>
                 <Image
                     resizeMode="cover"
-                    style={{width: "100%", height: "100%"}}
-                    source={this.props.source}
-                />
+                    style={{
+                    width: "100%",
+                    height: "100%"
+                }}
+                    source={this.props.source}/>
             </TouchableOpacity>
         );
     }
@@ -30,15 +32,19 @@ class ImagePlaceholder extends Component {
             <TouchableOpacity onPress={() => this.props.onPress()}>
                 <View
                     style={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: "#666666",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        alignContent: "center"
-                    }}
-                >
-                    <Text style={{color: "#fff", fontSize: 30, textAlign: "center"}}>
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "#666666",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    alignContent: "center"
+                }}>
+                    <Text
+                        style={{
+                        color: "#fff",
+                        fontSize: 30,
+                        textAlign: "center"
+                    }}>
                         {this.props.textPlaceholder}
                     </Text>
                 </View>

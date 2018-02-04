@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, Modal, ScrollView, TouchableWithoutFeedback, View} from 'react-native';
+import {
+    Dimensions,
+    Image,
+    Modal,
+    ScrollView,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
 import * as _ from 'lodash';
 
 class PhotoGrid extends Component {
@@ -63,30 +70,34 @@ class PhotoGrid extends Component {
                     return (
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(item)
-                                }}
+                                this.photoPopupToggle(item)
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof item === 'string' ? {uri: item} : item}
+                                    source={typeof item === 'string'
+                                    ? {
+                                        uri: item
+                                    }
+                                    : item}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                     )
                 })
-                }
+}
 
             </View>
         )
@@ -99,26 +110,30 @@ class PhotoGrid extends Component {
                 <View style={styles.alignCenter}>
                     <View
                         style={[
-                            styles.expandedView, {
-                                borderRadius: this.props.borderRadius
-                            }
-                        ]}>
+                        styles.expandedView, {
+                            borderRadius: this.props.borderRadius
+                        }
+                    ]}>
                         <TouchableWithoutFeedback
                             onPressIn={() => {
-                                this.photoPopupToggle(row[0])
-                            }}
+                            this.photoPopupToggle(row[0])
+                        }}
                             onPressOut={() => {
-                                this.photoOut()
-                            }}>
+                            this.photoOut()
+                        }}>
                             <Image
                                 resizeMode="contain"
-                                source={typeof row[0] === 'string' ? {uri: row[0]} : row[0]}
+                                source={typeof row[0] === 'string'
+                                ? {
+                                    uri: row[0]
+                                }
+                                : row[0]}
                                 style={[
-                                    styles.imageStyle,
-                                    styles.expandedImage, {
-                                        borderRadius: this.props.borderRadius
-                                    }
-                                ]}/>
+                                styles.imageStyle,
+                                styles.expandedImage, {
+                                    borderRadius: this.props.borderRadius
+                                }
+                            ]}/>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
@@ -128,50 +143,58 @@ class PhotoGrid extends Component {
                 <View style={styles.alignCenter}>
                     <View
                         style={[
-                            styles.expandedView, {
-                                borderRadius: this.props.borderRadius
-                            }
-                        ]}>
+                        styles.expandedView, {
+                            borderRadius: this.props.borderRadius
+                        }
+                    ]}>
                         <TouchableWithoutFeedback
                             onPressIn={() => {
-                                this.photoPopupToggle(row[0])
-                            }}
+                            this.photoPopupToggle(row[0])
+                        }}
                             onPressOut={() => {
-                                this.photoOut()
-                            }}>
+                            this.photoOut()
+                        }}>
                             <Image
                                 resizeMode="contain"
-                                source={typeof row[0] === 'string' ? {uri: row[0]} : row[0]}
+                                source={typeof row[0] === 'string'
+                                ? {
+                                    uri: row[0]
+                                }
+                                : row[0]}
                                 style={[
-                                    styles.imageStyle,
-                                    styles.expandedImage, {
-                                        borderRadius: this.props.borderRadius
-                                    }
-                                ]}/>
+                                styles.imageStyle,
+                                styles.expandedImage, {
+                                    borderRadius: this.props.borderRadius
+                                }
+                            ]}/>
                         </TouchableWithoutFeedback>
                     </View>
                     <View style={styles.flexCol}>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[1])
-                                }}
+                                this.photoPopupToggle(row[1])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[1] === 'string' ? {uri: row[1]} : row[1]}
+                                    source={typeof row[1] === 'string'
+                                    ? {
+                                        uri: row[1]
+                                    }
+                                    : row[1]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                     </View>
@@ -183,73 +206,85 @@ class PhotoGrid extends Component {
                 <View style={styles.alignCenter}>
                     <View
                         style={[
-                            styles.expandedView, {
-                                borderRadius: this.props.borderRadius
-                            }
-                        ]}>
+                        styles.expandedView, {
+                            borderRadius: this.props.borderRadius
+                        }
+                    ]}>
                         <TouchableWithoutFeedback
                             onPressIn={() => {
-                                this.photoPopupToggle(row[0])
-                            }}
+                            this.photoPopupToggle(row[0])
+                        }}
                             onPressOut={() => {
-                                this.photoOut()
-                            }}>
+                            this.photoOut()
+                        }}>
                             <Image
                                 resizeMode="contain"
-                                source={typeof row[0] === 'string' ? {uri: row[0]} : row[0]}
+                                source={typeof row[0] === 'string'
+                                ? {
+                                    uri: row[0]
+                                }
+                                : row[0]}
                                 style={[
-                                    styles.imageStyle,
-                                    styles.expandedImage, {
-                                        borderRadius: this.props.borderRadius
-                                    }
-                                ]}/>
+                                styles.imageStyle,
+                                styles.expandedImage, {
+                                    borderRadius: this.props.borderRadius
+                                }
+                            ]}/>
                         </TouchableWithoutFeedback>
                     </View>
                     <View style={styles.flexCol}>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[1])
-                                }}
+                                this.photoPopupToggle(row[1])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[1] === 'string' ? {uri: row[1]} : row[1]}
+                                    source={typeof row[1] === 'string'
+                                    ? {
+                                        uri: row[1]
+                                    }
+                                    : row[1]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[2])
-                                }}
+                                this.photoPopupToggle(row[2])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[2] === 'string' ? {uri: row[2]} : row[2]}
+                                    source={typeof row[2] === 'string'
+                                    ? {
+                                        uri: row[2]
+                                    }
+                                    : row[2]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                     </View>
@@ -268,25 +303,29 @@ class PhotoGrid extends Component {
                     <View style={styles.flexCol}>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[0])
-                                }}
+                                this.photoPopupToggle(row[0])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[0] === 'string' ? {uri: row[0]} : row[0]}
+                                    source={typeof row[0] === 'string'
+                                    ? {
+                                        uri: row[0]
+                                    }
+                                    : row[0]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
 
@@ -299,48 +338,56 @@ class PhotoGrid extends Component {
                     <View style={styles.flexCol}>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[0])
-                                }}
+                                this.photoPopupToggle(row[0])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[0] === 'string' ? {uri: row[0]} : row[0]}
+                                    source={typeof row[0] === 'string'
+                                    ? {
+                                        uri: row[0]
+                                    }
+                                    : row[0]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[1])
-                                }}
+                                this.photoPopupToggle(row[1])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[1] === 'string' ? {uri: row[1]} : row[1]}
+                                    source={typeof row[1] === 'string'
+                                    ? {
+                                        uri: row[1]
+                                    }
+                                    : row[1]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                     </View>
@@ -354,73 +401,85 @@ class PhotoGrid extends Component {
                     <View style={styles.flexCol}>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[0])
-                                }}
+                                this.photoPopupToggle(row[0])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[0] === 'string' ? {uri: row[0]} : row[0]}
+                                    source={typeof row[0] === 'string'
+                                    ? {
+                                        uri: row[0]
+                                    }
+                                    : row[0]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                         <View
                             style={[
-                                styles.photoView, {
-                                    borderRadius: this.props.borderRadius
-                                }
-                            ]}>
+                            styles.photoView, {
+                                borderRadius: this.props.borderRadius
+                            }
+                        ]}>
                             <TouchableWithoutFeedback
                                 onPressIn={() => {
-                                    this.photoPopupToggle(row[1])
-                                }}
+                                this.photoPopupToggle(row[1])
+                            }}
                                 onPressOut={() => {
-                                    this.photoOut()
-                                }}>
+                                this.photoOut()
+                            }}>
                                 <Image
                                     resizeMode="contain"
-                                    source={typeof row[1] === 'string' ? {uri: row[1]} : row[1]}
+                                    source={typeof row[1] === 'string'
+                                    ? {
+                                        uri: row[1]
+                                    }
+                                    : row[1]}
                                     style={[
-                                        styles.imageStyle, {
-                                            borderRadius: this.props.borderRadius
-                                        }
-                                    ]}/>
+                                    styles.imageStyle, {
+                                        borderRadius: this.props.borderRadius
+                                    }
+                                ]}/>
                             </TouchableWithoutFeedback>
                         </View>
                     </View>
                     <View
                         style={[
-                            styles.expandedView, {
-                                borderRadius: this.props.borderRadius
-                            }
-                        ]}>
+                        styles.expandedView, {
+                            borderRadius: this.props.borderRadius
+                        }
+                    ]}>
                         <TouchableWithoutFeedback
                             onPressIn={() => {
-                                this.photoPopupToggle(row[2])
-                            }}
+                            this.photoPopupToggle(row[2])
+                        }}
                             onPressOut={() => {
-                                this.photoOut()
-                            }}>
+                            this.photoOut()
+                        }}>
                             <Image
                                 resizeMode="contain"
-                                source={typeof row[2] === 'string' ? {uri: row[2]} : row[2]}
+                                source={typeof row[2] === 'string'
+                                ? {
+                                    uri: row[2]
+                                }
+                                : row[2]}
                                 style={[
-                                    styles.imageStyle,
-                                    styles.expandedImage, {
-                                        borderRadius: this.props.borderRadius
-                                    }
-                                ]}/>
+                                styles.imageStyle,
+                                styles.expandedImage, {
+                                    borderRadius: this.props.borderRadius
+                                }
+                            ]}/>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
@@ -447,30 +506,31 @@ class PhotoGrid extends Component {
                     <Modal
                         animationType={"fade"}
                         transparent={false}
-                        onRequestClose={() => {
-                        }}
+                        onRequestClose={() => {}}
                         visible={this.state.modalVisible}>
                         <View style={styles.overlay}>
                             <View style={styles.containerModal}>
                                 <View
                                     style={{
-                                        backgroundColor: "#fff",
-                                        width: "100%",
-                                        flex: 1
-                                    }}/>
+                                    backgroundColor: "#fff",
+                                    width: "100%",
+                                    flex: 1
+                                }}/>
                                 <Image
-                                    source={{uri: this.state.photoUrl}}
+                                    source={{
+                                    uri: this.state.photoUrl
+                                }}
                                     resizeMode="contain"
                                     style={{
-                                        width: "100%",
-                                        flex: 5
-                                    }}/>
+                                    width: "100%",
+                                    flex: 5
+                                }}/>
                                 <View
                                     style={{
-                                        backgroundColor: "#fff",
-                                        width: "100%",
-                                        flex: 1
-                                    }}/>
+                                    backgroundColor: "#fff",
+                                    width: "100%",
+                                    flex: 1
+                                }}/>
                             </View>
                         </View>
                     </Modal>

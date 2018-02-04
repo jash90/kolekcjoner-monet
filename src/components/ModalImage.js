@@ -17,27 +17,27 @@ class ModalImage extends Component {
                     <View style={styles.container}>
                         <View
                             style={{
-                                backgroundColor: "#fff",
-                                width: "100%",
-                                flex: 1
-                            }}/>
+                            backgroundColor: "#fff",
+                            width: "100%",
+                            flex: 1
+                        }}/>
                         <Image
                             source={typeof this.props.image === 'string'
-                                ? {
-                                    uri: this.props.image
-                                }
-                                : this.props.image}
+                            ? {
+                                uri: this.props.image
+                            }
+                            : this.props.image}
                             resizeMode="contain"
                             style={{
-                                width: "100%",
-                                flex: 5
-                            }}/>
+                            width: "100%",
+                            flex: 5
+                        }}/>
                         <View
                             style={{
-                                backgroundColor: "#fff",
-                                width: "100%",
-                                flex: 1
-                            }}/>
+                            backgroundColor: "#fff",
+                            width: "100%",
+                            flex: 1
+                        }}/>
                     </View>
                 </View>
             </TouchableWithoutFeedback>

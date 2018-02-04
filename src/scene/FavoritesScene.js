@@ -30,9 +30,33 @@ TimeAgo.locale(pl);
 const timeAgo = new TimeAgo("pl-PL");
 
 class FavoritesScene extends Component {
+    constructor(props) {
+        super(props);
+        this.ref = firebase
+            .firestore()
+            .collection("favorites");
+        this.storage = firebase.storage();
+        this.unsubscribe = null;
+        this.state = {
+            loading: true,
+            posts: [],
+            image: "",
+            name: ""
+        };
+    }
+
+    componentDidMount() {
+        this.unsubscribe = this
+            .ref
+            .onSnapshot(this.onCollectionUpdate);
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
     onCollectionUpdate = querySnapshot => {
         const posts = [];
-        this.setState({loading:true});
+        this.setState({loading: true});
         firebase
             .firestore()
             .doc("favorites/" + this.props.user.id)
@@ -75,96 +99,67 @@ class FavoritesScene extends Component {
                                     });
                             });
                     });
-                    this.setState({loading:false});
+                this.setState({loading: false});
 
             });
 
     };
-    closeDrawer = () => {
-        this
-            .drawer
-            ._root
-            .close();
-    };
-    openDrawer = () => {
-        this
-            .drawer
-            ._root
-            .open();
-    };
-
-    constructor(props) {
-        super(props);
-        this.ref = firebase
-            .firestore()
-            .collection("favorites");
-        this.storage = firebase.storage();
-        this.unsubscribe = null;
-        this.state = {
-            loading: true,
-            posts: [],
-            image: "",
-            name: ""
-        };
-    }
-
-    componentDidMount() {
-        this.unsubscribe = this
-            .ref
-            .onSnapshot(this.onCollectionUpdate);
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
     render() {
         return <Container>
             <Header>
                 <Left>
                     <Button transparent onPress={() => this.openDrawer()}>
-                        <Icon name={"ios-menu"} style={{
+                        <Icon
+                            name={"ios-menu"}
+                            style={{
                             color: "#fff"
                         }}/>
                     </Button>
                 </Left>
                 <Body>
-                <Text style={{
-                    color: "#fff"
-                }}>Ulubione Monety</Text>
+                    <Text style={{
+                        color: "#fff"
+                    }}>Ulubione Monety</Text>
                 </Body>
             </Header>
             <Drawer
                 ref={ref => {
-                    this.drawer = ref;
-                }}
-                content={< SideBar/>}
+                this.drawer = ref;
+            }}
+                content={< SideBar />}
                 onClose={() => this.closeDrawer()}>
-                <Content style={{backgroundColor:"#fff"}}>
-                <LoadingList 
+                <Content
+                    style={{
+                    backgroundColor: "#fff"
+                }}>
+                    <LoadingList
                         loading={this.state.loading}
-                        condition={this.state.posts.length==0}
+                        condition={this.state.posts.length == 0}
                         text={"Brak Postów"}
-                        loadingText={"Loading"}
-                        >
-                    <List
-                        dataArray={this.state.posts}
-                        style={{width:"100%"}}
-                        renderRow={item => <Card style={{
+                        loadingText={"Loading"}>
+                        <List
+                            dataArray={this.state.posts}
+                            style={{
+                            width: "100%"
+                        }}
+                            renderRow={item => <Card style={{
                             flex: 0
                         }}>
                             <CardItem>
                                 <Left>
-                                    <Thumbnail source={
-                                       (item.user.link==null)?require('../img/user.jpg'):{uri: item.user.link}
-                                    }/>
+                                    <Thumbnail
+                                        source={(item.user.link == null)
+                                        ? require('../img/user.jpg')
+                                        : {
+                                            uri: item.user.link
+                                        }}/>
                                     <Body>
-                                    <Text>
-                                        {item.user.firstname + " " + item.user.lastname}
-                                    </Text>
-                                    <Text note>
-                                        {Moment(item.dateupdate).format("DD.MM.YYYY")}
-                                    </Text>
+                                        <Text>
+                                            {item.user.firstname + " " + item.user.lastname}
+                                        </Text>
+                                        <Text note>
+                                            {Moment(item.dateupdate).format("DD.MM.YYYY")}
+                                        </Text>
                                     </Body>
                                 </Left>
                                 <Right>
@@ -173,11 +168,11 @@ class FavoritesScene extends Component {
                             </CardItem>
                             <CardItem cardBody>
                                 <Body>
-                                <Image
-                                    source={{
+                                    <Image
+                                        source={{
                                         uri: item.link
                                     }}
-                                    style={{
+                                        style={{
                                         width: "95%",
                                         height: 200,
                                         alignSelf: "center",
@@ -193,18 +188,31 @@ class FavoritesScene extends Component {
                                     </Button>
                                 </Left>
                                 <Body>
-                                <Button transparent>
-                                    <Icon active name="chatbubbles"/>
-                                    <Text>{item.comments.length + " Comments"}</Text>
-                                </Button>
+                                    <Button transparent>
+                                        <Icon active name="chatbubbles"/>
+                                        <Text>{item.comments.length + " Comments"}</Text>
+                                    </Button>
                                 </Body>
                             </CardItem>
                         </Card>}/>
-                        </LoadingList>
+                    </LoadingList>
                 </Content>
             </Drawer>
         </Container>;
     }
+    closeDrawer = () => {
+        this
+            .drawer
+            ._root
+            .close();
+    };
+    openDrawer = () => {
+        this
+            .drawer
+            ._root
+            .open();
+    };
+
 }
 
 export default FavoritesScene;

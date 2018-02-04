@@ -28,7 +28,7 @@ class FriendsScene extends Component {
         super(props);
         this.state = {
             followers: [],
-            loading:true
+            loading: true
         };
         this.ref = firebase
             .firestore()
@@ -47,7 +47,42 @@ class FriendsScene extends Component {
     componentWillUnmount() {
         this.unsubscribe();
     }
+    onCollectionUpdate = (querySnapshot) => {
+        console.log(this.props.user);
+        const followers = [];
+        this.setState({loading: true});
+        firebase
+            .firestore()
+            .doc("followers/" + this.props.user.id)
+            .get()
+            .then(doc => {
+                const {users} = doc.data();
+                users.forEach(user => {
+                    user
+                        .get()
+                        .then(e => {
+                            var user = e.data();
+                            firebase
+                                .storage()
+                                .ref(e.id + ".jpg")
+                                .getDownloadURL()
+                                .then(url => {
 
+                                    user.link = url;
+
+                                })
+                                . finally(() => {
+                                    followers.push(user);
+                                    this.setState({followers});
+                                    this.setState({loading: false});
+                                });
+
+                        });
+
+                });
+
+            });
+    }
     render() {
         return (
             <Container>
@@ -80,93 +115,54 @@ class FriendsScene extends Component {
                         style={{
                         backgroundColor: "#fff"
                     }}>
-                      <LoadingList 
-                        loading={this.state.loading}
-                        condition={this.state.followers.length==0}
-                        text={"Brak Postów"}
-                        loadingText={"Loading"}
-                        >
-                        <List
-                            dataArray={this.state.followers}
-                            style={{
-                                width:"100%"
-                            }}
-                            renderRow={(item) => (
-                            <View
+                        <LoadingList
+                            loading={this.state.loading}
+                            condition={this.state.followers.length == 0}
+                            text={"Brak Postów"}
+                            loadingText={"Loading"}>
+                            <List
+                                dataArray={this.state.followers}
                                 style={{
-                                justifyContent: "flex-start",
-                                flexDirection: "row",
-                                
-                            }}>
+                                width: "100%"
+                            }}
+                                renderRow={(item) => (
                                 <View
                                     style={{
-                                    justifyContent: "center"
+                                    justifyContent: "flex-start",
+                                    flexDirection: "row"
                                 }}>
-                                    <Thumbnail
-                                        small
-                                        source={(item.link == null)
-                                        ? require('../img/user.jpg')
-                                        : {
-                                            uri: item.link
-                                        }}
+                                    <View
                                         style={{
-                                            margin:10
-                                        }}
-                                       />
+                                        justifyContent: "center"
+                                    }}>
+                                        <Thumbnail
+                                            small
+                                            source={(item.link == null)
+                                            ? require('../img/user.jpg')
+                                            : {
+                                                uri: item.link
+                                            }}
+                                            style={{
+                                            margin: 10
+                                        }}/>
+                                    </View>
+                                    <View
+                                        style={{
+                                        alignItems: "flex-start",
+                                        justifyContent: "center"
+                                    }}>
+                                        <Text>{item.firstname + " " + item.lastname}</Text>
+                                        <Text note>
+                                            {"Miasto: " + item.city + " Email: " + item.email}
+                                        </Text>
+                                    </View>
                                 </View>
-                                <View
-                                    style={{
-                                    alignItems: "flex-start",
-                                    justifyContent: "center"
-                                }}>
-                                    <Text>{item.firstname + " " + item.lastname}</Text>
-                                    <Text note>
-                                        {"Miasto: " + item.city + " Email: " + item.email}
-                                    </Text>
-                                </View>
-                            </View>
-                        )}/>
+                            )}/>
                         </LoadingList>
                     </Content>
                 </Drawer>
             </Container>
         );
-    }
-    onCollectionUpdate = (querySnapshot) => {
-        console.log(this.props.user);
-        const followers = [];
-        this.setState({loading:true});
-        firebase
-            .firestore()
-            .doc("followers/" + this.props.user.id)
-            .get()
-            .then(doc => {
-                const {users} = doc.data();
-                users.forEach(user => {
-                    user
-                        .get()
-                        .then(e => {
-                            var user = e.data();
-                            firebase
-                            .storage()
-                            .ref(e.id + ".jpg")
-                            .getDownloadURL()
-                            .then(url => {
-                               
-                                user.link = url;
-
-                            })
-                            .finally(()=>{
-                                followers.push(user);
-                                this.setState({followers});
-                                this.setState({loading:false});
-                            });
-                           
-                        });
-
-                });
-
-            });
     }
     closeDrawer = () => {
         this

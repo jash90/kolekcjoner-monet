@@ -38,7 +38,97 @@ class LoginScene extends Component {
             autologin: false
         };
     }
+    async componentWillMount() {
+        try {
+            const autologin = await AsyncStorage.getItem('@AutoLogin:key');
+            if (autologin !== null) {
+                this.setState({
+                    autologin: JSON.parse(autologin)
+                });
+            }
+            if (this.state.autologin) {
+                const login = await AsyncStorage.getItem('@login:key');
+                if (login !== null) {
+                    this.setState({login});
+                }
+                const password = await AsyncStorage.getItem('@password:key');
+                if (password !== null) {
+                    this.setState({password});
+                }
+                //    if (this.state.login != null && this.state.password != null) {
+                // this.onLogin();   }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+    render() {
+        return (
+            <Container>
+                <Header>
+                    <Body>
+                        <Text
+                            style={{
+                            color: "#fff"
+                        }}>Kolekcjoner Monet</Text>
+                    </Body>
+                </Header>
+                <View
+                    style={{
+                    margin: 16,
+                    justifyContent: "space-around"
+                }}>
+                    <Body style={{
+                        margin: 20
+                    }}>
+                        <Text>Logowanie</Text>
+                    </Body>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label>Login</Label>
+                            <Input
+                                value={this.state.login}
+                                onChangeText={text => this.setState({login: text})}/>
+                        </Item>
+                        <Item floatingLabel last>
+                            <Label>Hasło</Label>
+                            <Input
+                                value={this.state.password}
+                                secureTextEntry={true}
+                                onChangeText={text => this.setState({password: text})}/>
+                        </Item>
+                    </Form>
+                    <ModalLoading text={"Logowanie..."} visible={this.state.loading}/>
+                    <View
+                        style={{
+                        flexDirection: "row",
+                        marginTop: 20,
+                        marginBottom: 10
+                    }}>
+                        <Switch
+                            value={this.state.autologin}
+                            onValueChange={(value) => this.onChangeAutoLogin(value)}
+                            onTintColor="#6f7ab1"
+                            thumbTintColor="#324190"/>
+                        <Text>{"Pozostań zalogowany"}</Text>
+                    </View>
+                    <Button
+                        block
+                        style={{
+                        marginTop: 10,
+                        marginBottom: 10
+                    }}
+                        onPress={() => this.onLogin()}>
+                        <Text>Zaloguj</Text>
+                    </Button>
+                    <Button block onPress={() => Actions.RegisterScene()}>
+                        <Text>Zarejestruj</Text>
+                    </Button>
+                </View>
+            </Container>
+        );
+    }
     async saveUserID(id) {
         try {
             await AsyncStorage.setItem("@UserId:key", id);
@@ -64,98 +154,6 @@ class LoginScene extends Component {
         }
     }
 
-    async componentWillMount() {
-        try {
-            const autologin = await AsyncStorage.getItem('@AutoLogin:key');
-            if (autologin !== null) {
-                this.setState({
-                    autologin: JSON.parse(autologin)
-                });
-            }
-            if (this.state.autologin) {
-                const login = await AsyncStorage.getItem('@login:key');
-                if (login !== null) {
-                    this.setState({login});
-                }
-                const password = await AsyncStorage.getItem('@password:key');
-                if (password !== null) {
-                    this.setState({password});
-                }
-                //    if (this.state.login != null && this.state.password != null) {
-                //       this.onLogin();
-                //   }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    render() {
-        return (
-            <Container>
-                <Header>
-                    <Body>
-                    <Text style={{
-                        color: "#fff"
-                    }}>Kolekcjoner Monet</Text>
-                    </Body>
-                </Header>
-                <View
-                    style={{
-                        margin: 16,
-                        justifyContent: "space-around"
-                    }}>
-                    <Body style={{
-                        margin: 20
-                    }}>
-                    <Text>Logowanie</Text>
-                    </Body>
-                    <Form>
-                        <Item floatingLabel>
-                            <Label>Login</Label>
-                            <Input
-                                value={this.state.login}
-                                onChangeText={text => this.setState({login: text})}/>
-                        </Item>
-                        <Item floatingLabel last>
-                            <Label>Hasło</Label>
-                            <Input
-                                value={this.state.password}
-                                secureTextEntry={true}
-                                onChangeText={text => this.setState({password: text})}/>
-                        </Item>
-                    </Form>
-                    <ModalLoading text={"Logowanie..."} visible={this.state.loading}/>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            marginTop: 20,
-                            marginBottom: 10
-                        }}>
-                        <Switch
-                            value={this.state.autologin}
-                            onValueChange={(value) => this.onChangeAutoLogin(value)}
-                            onTintColor="#6f7ab1"
-                            thumbTintColor="#324190"/>
-                        <Text>{"Pozostań zalogowany"}</Text>
-                    </View>
-                    <Button
-                        block
-                        style={{
-                            marginTop: 10,
-                            marginBottom: 10
-                        }}
-                        onPress={() => this.onLogin()}>
-                        <Text>Zaloguj</Text>
-                    </Button>
-                    <Button block onPress={() => Actions.RegisterScene()}>
-                        <Text>Zarejestruj</Text>
-                    </Button>
-                </View>
-            </Container>
-        );
-    }
-
     onChangeAutoLogin(value) {
         this.setState({autologin: value});
         this.saveAutoLogin(value);
@@ -172,15 +170,17 @@ class LoginScene extends Component {
                 this.saveloginhaslo(this.state.login, this.state.password);
                 ToastAndroid.show("Zalogowałes sie jako " + data.email + " .", ToastAndroid.SHORT);
                 firebase
-                .firestore()
-                .doc("users/"+data.uid)
-                .get()
-                .then((value)=>{
-                  console.log(value);
-                  Actions.HomeScene({ user: value.data() });
-                  this.setState({ error: "", loading: false });
-                });
-                
+                    .firestore()
+                    .doc("users/" + data.uid)
+                    .get()
+                    .then((value) => {
+                        console.log(value);
+                        Actions.HomeScene({
+                            user: value.data()
+                        });
+                        this.setState({error: "", loading: false});
+                    });
+
             })
             .catch(error => {
                 this.setState({error: "Authentication failed.", loading: false});

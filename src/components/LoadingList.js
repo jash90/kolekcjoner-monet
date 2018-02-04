@@ -7,15 +7,18 @@ class LoadingList extends Component {
             <View
                 style={{
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "center"
             }}>
                 {this.props.loading
                     ? <ModalLoading visible={this.props.loading} text={this.props.loadingText}/>
                     : this.props.condition
-                        ? <View style={{
-                            alignItems:"center",
-                            justifyContent:"center",
-                        }}><Text>{this.props.text}</Text></View>
+                        ? <View
+                                style={{
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }}>
+                                <Text>{this.props.text}</Text>
+                            </View>
                         : this.props.children
 }
             </View>

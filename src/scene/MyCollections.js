@@ -29,26 +29,6 @@ import firebase from "react-native-firebase";
 import LoadingList from '../components/LoadingList';
 
 class MyCollections extends Component {
-    onVisibleImage = img => {
-        this.setState({image: img});
-        this.setState({visible: true});
-    };
-    onDismissModal = () => {
-        this.setState({visible: false});
-    };
-    closeDrawer = () => {
-        this
-            .drawer
-            ._root
-            .close();
-    };
-    openDrawer = () => {
-        this
-            .drawer
-            ._root
-            .open();
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -58,23 +38,23 @@ class MyCollections extends Component {
             posts: [],
             follow: false,
             loading: true,
-            myId : null
+            myId: null
         };
     }
 
     async componentWillMount() {
-         try {
+        try {
             const value = await AsyncStorage.getItem('@UserId:key');
             if (value !== null) {
                 this.setState({myId: value});
-                   console.log(this.state.myId);
-                   console.log(this.props.user.id);
-                   console.log(this.state.myId == this.props.user.id);
+                console.log(this.state.myId);
+                console.log(this.props.user.id);
+                console.log(this.state.myId == this.props.user.id);
             }
         } catch (error) {
             console.log(error);
         }
-     
+
         var ref = firebase
             .firestore()
             .doc("users/" + this.props.user.id);
@@ -205,25 +185,42 @@ class MyCollections extends Component {
                             </View>
                         </View>
                         <View
-                        style={{
-                            alignItems:"center",
-                            justifyContent:"center"
-                        }}
-                        >
-                        <LoadingList 
-                        loading={this.state.loading}
-                        condition={this.state.photos.length==0}
-                        text={"Brak Postów"}
-                        loadingText={"Loading"}
-                        >
-                         <PhotoGrid PhotosList={this.state.photos} borderRadius={10}/>
-                         </LoadingList>
-                         </View>
+                            style={{
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}>
+                            <LoadingList
+                                loading={this.state.loading}
+                                condition={this.state.photos.length == 0}
+                                text={"Brak Postów"}
+                                loadingText={"Loading"}>
+                                <PhotoGrid PhotosList={this.state.photos} borderRadius={10}/>
+                            </LoadingList>
+                        </View>
                     </Content>
                 </Drawer>
             </Container>
         );
     }
+    closeDrawer = () => {
+        this
+            .drawer
+            ._root
+            .close();
+    };
+    openDrawer = () => {
+        this
+            .drawer
+            ._root
+            .open();
+    };
+    onVisibleImage = img => {
+        this.setState({image: img});
+        this.setState({visible: true});
+    };
+    onDismissModal = () => {
+        this.setState({visible: false});
+    };
     renderUser = (link) => {
         if (link == null) {
             return require('../img/user.jpg');
