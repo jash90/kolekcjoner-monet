@@ -168,10 +168,19 @@ class LoginScene extends Component {
             .signInWithEmailAndPassword(this.state.login, this.state.password)
             .then(data => {
                 this.saveUserID(data.uid);
+
                 this.saveloginhaslo(this.state.login, this.state.password);
                 ToastAndroid.show("Zalogowałes sie jako " + data.email + " .", ToastAndroid.SHORT);
-                Actions.HomeScene();
-                this.setState({error: "", loading: false});
+                firebase
+                .firestore()
+                .doc("users/"+data.uid)
+                .get()
+                .then((value)=>{
+                  console.log(value);
+                  Actions.HomeScene({ user: value.data() });
+                  this.setState({ error: "", loading: false });
+                });
+                
             })
             .catch(error => {
                 this.setState({error: "Authentication failed.", loading: false});

@@ -57,11 +57,24 @@ class MyCollections extends Component {
             photos: [],
             posts: [],
             follow: false,
-            loading: true
+            loading: true,
+            myId : null
         };
     }
 
     async componentWillMount() {
+         try {
+            const value = await AsyncStorage.getItem('@UserId:key');
+            if (value !== null) {
+                this.setState({myId: value});
+                   console.log(this.state.myId);
+                   console.log(this.props.user.id);
+                   console.log(this.state.myId == this.props.user.id);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+     
         var ref = firebase
             .firestore()
             .doc("users/" + this.props.user.id);

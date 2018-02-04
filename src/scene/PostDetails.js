@@ -117,8 +117,8 @@ class HomeScene extends Component {
                             </CardItem>
                             <CardItem>
                                 <Left>
-                                    <Button transparent>
-                                        <Icon active name={this.props.post.likes.includes(this.props.user.id)?"ios-thumbs-up":"ios-thumbs-up-outline"}/>
+                                    <Button transparent onPress={()=>this.props.post.likes.push(this.props.user.id)}>
+                                        <Icon name={this.props.post.likes.includes(this.props.user.id)?"ios-thumbs-up":"ios-thumbs-up-outline"}/>
                                         <Text>{this.props.post.likes.length + " Likes"}</Text>
                                     </Button>
                                 </Left>
