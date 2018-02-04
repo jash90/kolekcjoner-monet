@@ -1,12 +1,5 @@
 import React, {Component} from "react";
-import {
-    View,
-    Modal,
-    Image,
-    Text,
-    StyleSheet,
-    TouchableWithoutFeedback
-} from "react-native";
+import {Image, Modal, StyleSheet, TouchableWithoutFeedback, View} from "react-native";
 
 class ModalImage extends Component {
     constructor(props) {

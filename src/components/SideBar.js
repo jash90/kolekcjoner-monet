@@ -1,22 +1,22 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, AsyncStorage} from 'react-native'
+import {AsyncStorage} from 'react-native'
 import {
-    Container,
-    Header,
-    Content,
+    Body,
     Button,
+    Container,
+    Content,
     Form,
+    Header,
+    Icon,
+    Input,
     Item,
     Label,
-    Input,
-    Icon,
-    Body,
     Left,
     List,
     ListItem,
-    Text,
     Right,
-    Switch
+    Switch,
+    Text
 } from 'native-base';
 import {Actions} from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
@@ -39,11 +39,16 @@ class SideBar extends Component {
                     var user = u.data();
                     user.id = u.id;
                     firebase.storage().ref(u.id + ".jpg").getDownloadURL()
-                        .then(url => {
-                            user.link = url;
-                            this.setState({user});
-                            console.log(user);
-                        });
+                    .then(url => {
+                      
+                        user.link = url;
+
+                    })
+                    .finally(()=>{
+                        this.setState({user});
+                        console.log(user);
+                    });
+
                 });
             }
         } catch (error) {
@@ -72,12 +77,12 @@ class SideBar extends Component {
                         <Text>Przeglądaj</Text>
                         </Body>
                     </ListItem>
-                    <ListItem icon onPress={() => Actions.FriendsScene()}>
+                    <ListItem icon onPress={() => Actions.FriendsScene({user: this.state.user})}>
                         <Left>
                             <Icon name="ios-contacts"/>
                         </Left>
                         <Body>
-                        <Text>Twoi znajomi</Text>
+                        <Text>Twoi obserwujący</Text>
                         </Body>
                     </ListItem>
                     <ListItem itemDivider/>
@@ -89,7 +94,7 @@ class SideBar extends Component {
                         <Text>Moja kolekcja</Text>
                         </Body>
                     </ListItem>
-                    <ListItem icon onPress={() => Actions.FavoritesScene()}>
+                    <ListItem icon onPress={() => Actions.FavoritesScene({user: this.state.user})}>
                         <Left>
                             <Icon name="ios-heart"/>
                         </Left>

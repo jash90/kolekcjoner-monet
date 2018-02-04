@@ -1,32 +1,23 @@
 import React, {Component} from "react";
+import {Dimensions, ScrollView, TextInput, View} from "react-native";
 import {
-    Platform,
-    StyleSheet,
-    View,
-    Image,
-    Dimensions,
-    TextInput,
-    ScrollView,
-    KeyboardAvoidingView
-} from "react-native";
-import {
-    Container,
-    Header,
-    Content,
+    Body,
     Button,
-    Text,
+    Container,
+    Content,
+    Drawer,
     Form,
+    Header,
+    Icon,
+    Input,
     Item,
     Label,
-    Input,
-    Icon,
-    Body,
     Left,
-    Right,
-    Drawer,
+    List,
     ListItem,
-    Thumbnail,
-    List
+    Right,
+    Text,
+    Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
 import ImagePicker from "react-native-image-picker";
@@ -36,6 +27,80 @@ import ModalLoading from '../components/ModalLoading';
 import {Actions} from "react-native-router-flux";
 
 class SendScene extends Component {
+    closeDrawer = () => {
+        this
+            .drawer
+            ._root
+            .close();
+    };
+    openDrawer = () => {
+        this
+            .drawer
+            ._root
+            .open();
+    };
+    selectPhotoTapped = () => {
+        const options = {
+            quality: 1.0,
+            maxWidth: 500,
+            maxHeight: 500,
+            storageOptions: {
+                skipBackup: true
+            }
+        };
+
+        ImagePicker.showImagePicker(options, response => {
+            console.log("Response = ", response);
+
+            if (response.didCancel) {
+                console.log("User cancelled photo picker");
+            } else if (response.error) {
+                console.log("ImagePicker Error: ", response.error);
+            } else if (response.customButton) {
+                console.log("User tapped custom button: ", response.customButton);
+            } else {
+                let source = {
+                    uri: response.uri
+                };
+                this.setState({uri: source, image: response});
+            }
+        });
+    };
+    sendImage = () => {
+        this.setState({visible: true});
+        console.log("USER : " + this.props.user.id);
+        var user = firebase.firestore().doc("users/" + this.props.user.id);
+        console.log("ref :" + user);
+        this.ref.add({
+            description: this.state.description,
+            likes: [],
+            comments: [],
+            dateupdate: new Date(),
+            idusers: user
+
+        }).then((response) => {
+            response.get().then((value) => {
+                firebase
+                    .storage()
+                    .ref('/' + value.id + '.jpg')
+                    .putFile(this.state.image.path)
+                    .then((successCb) => {
+                        console.log(successCb);
+                        this.setState({visible: false});
+                        Actions.HomeScene();
+                    })
+                    .catch((failureCb) => {
+                        console.log(failureCb);
+                        this.setState({visible: false});
+                    });
+            });
+        }).catch((error) => {
+            console.log(error);
+            this.setState({visible: false});
+        });
+
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -138,80 +203,6 @@ class SendScene extends Component {
                 </ScrollView>
             </Container>
         );
-    }
-
-    closeDrawer = () => {
-        this
-            .drawer
-            ._root
-            .close();
-    };
-    openDrawer = () => {
-        this
-            .drawer
-            ._root
-            .open();
-    };
-    selectPhotoTapped = () => {
-        const options = {
-            quality: 1.0,
-            maxWidth: 500,
-            maxHeight: 500,
-            storageOptions: {
-                skipBackup: true
-            }
-        };
-
-        ImagePicker.showImagePicker(options, response => {
-            console.log("Response = ", response);
-
-            if (response.didCancel) {
-                console.log("User cancelled photo picker");
-            } else if (response.error) {
-                console.log("ImagePicker Error: ", response.error);
-            } else if (response.customButton) {
-                console.log("User tapped custom button: ", response.customButton);
-            } else {
-                let source = {
-                    uri: response.uri
-                };
-                this.setState({uri: source, image: response});
-            }
-        });
-    };
-    sendImage = () => {
-        this.setState({visible: true});
-        console.log("USER : " + this.props.user.id);
-        var user = firebase.firestore().doc("users/" + this.props.user.id);
-        console.log("ref :" + user);
-        this.ref.add({
-            description: this.state.description,
-            likes: [],
-            comments: [],
-            dateupdate: new Date(),
-            idusers: user
-
-        }).then((response) => {
-            response.get().then((value) => {
-                firebase
-                    .storage()
-                    .ref('/' + value.id + '.jpg')
-                    .putFile(this.state.image.path)
-                    .then((successCb) => {
-                        console.log(successCb);
-                        this.setState({visible: false});
-                        Actions.HomeScene();
-                    })
-                    .catch((failureCb) => {
-                        console.log(failureCb);
-                        this.setState({visible: false});
-                    });
-            });
-        }).catch((error) => {
-            console.log(error);
-            this.setState({visible: false});
-        });
-
     }
 }
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Modal, ActivityIndicator, Text, StyleSheet} from 'react-native';
+import {ActivityIndicator, Modal, StyleSheet, Text, View} from 'react-native';
 
 class ModalLoading extends Component {
     constructor(props) {

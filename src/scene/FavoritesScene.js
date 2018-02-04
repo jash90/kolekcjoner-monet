@@ -1,75 +1,41 @@
 import React, {Component} from "react";
+import {Image} from "react-native";
 import {
-    Platform,
-    StyleSheet,
-    View,
-    Image,
-    Modal,
-    TouchableOpacity,
-    AsyncStorage
-} from "react-native";
-import {
-    Container,
-    Header,
-    Content,
-    Button,
-    Text,
-    Form,
-    Item,
-    Label,
-    Input,
-    Icon,
     Body,
-    Left,
-    Right,
-    Drawer,
+    Button,
     Card,
     CardItem,
-    Thumbnail,
-    List
+    Container,
+    Content,
+    Drawer,
+    Form,
+    Header,
+    Icon,
+    Input,
+    Item,
+    Label,
+    Left,
+    List,
+    Right,
+    Text,
+    Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
-import {Actions} from "react-native-router-flux";
-import ImageViewer from "react-native-image-view";
 import firebase from "react-native-firebase";
 import Moment from "moment";
 import TimeAgo from "javascript-time-ago";
 import pl from "javascript-time-ago/locale/pl";
-
+import LoadingList from '../components/LoadingList';
 TimeAgo.locale(pl);
 const timeAgo = new TimeAgo("pl-PL");
 
 class FavoritesScene extends Component {
-    constructor(props) {
-        super(props);
-        this.ref = firebase
-            .firestore()
-            .collection("favorites");
-        this.storage = firebase.storage();
-        this.unsubscribe = null;
-        this.state = {
-            loading: true,
-            posts: [],
-            image: "",
-            name: ""
-        };
-    }
-
-    componentDidMount() {
-        this.unsubscribe = this
-            .ref
-            .onSnapshot(this.onCollectionUpdate);
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
     onCollectionUpdate = querySnapshot => {
         const posts = [];
+        this.setState({loading:true});
         firebase
             .firestore()
-            .doc("favorites/NbcZVRCcpRWAjOsx47L7CJArCH83")
+            .doc("favorites/" + this.props.user.id)
             .get()
             .then((fav) => {
                 fav
@@ -100,16 +66,57 @@ class FavoritesScene extends Component {
                                                     .then(url => {
                                                         post.link = url;
                                                         posts.push(post);
+                                                        posts.sort((a, b) => {
+                                                            return a.dateupdate - b.dateupdate;
+                                                        });
                                                         this.setState({posts});
                                                     });
                                             });
                                     });
                             });
                     });
+                    this.setState({loading:false});
 
             });
 
     };
+    closeDrawer = () => {
+        this
+            .drawer
+            ._root
+            .close();
+    };
+    openDrawer = () => {
+        this
+            .drawer
+            ._root
+            .open();
+    };
+
+    constructor(props) {
+        super(props);
+        this.ref = firebase
+            .firestore()
+            .collection("favorites");
+        this.storage = firebase.storage();
+        this.unsubscribe = null;
+        this.state = {
+            loading: true,
+            posts: [],
+            image: "",
+            name: ""
+        };
+    }
+
+    componentDidMount() {
+        this.unsubscribe = this
+            .ref
+            .onSnapshot(this.onCollectionUpdate);
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
 
     render() {
         return <Container>
@@ -133,17 +140,24 @@ class FavoritesScene extends Component {
                 }}
                 content={< SideBar/>}
                 onClose={() => this.closeDrawer()}>
-                <Content>
+                <Content style={{backgroundColor:"#fff"}}>
+                <LoadingList 
+                        loading={this.state.loading}
+                        condition={this.state.posts.length==0}
+                        text={"Brak Postów"}
+                        loadingText={"Loading"}
+                        >
                     <List
                         dataArray={this.state.posts}
+                        style={{width:"100%"}}
                         renderRow={item => <Card style={{
                             flex: 0
                         }}>
                             <CardItem>
                                 <Left>
-                                    <Thumbnail source={{
-                                        uri: item.user.link
-                                    }}/>
+                                    <Thumbnail source={
+                                       (item.user.link==null)?require('../img/user.jpg'):{uri: item.user.link}
+                                    }/>
                                     <Body>
                                     <Text>
                                         {item.user.firstname + " " + item.user.lastname}
@@ -186,23 +200,11 @@ class FavoritesScene extends Component {
                                 </Body>
                             </CardItem>
                         </Card>}/>
+                        </LoadingList>
                 </Content>
             </Drawer>
         </Container>;
     }
-
-    closeDrawer = () => {
-        this
-            .drawer
-            ._root
-            .close();
-    };
-    openDrawer = () => {
-        this
-            .drawer
-            ._root
-            .open();
-    };
 }
 
 export default FavoritesScene;

@@ -1,35 +1,26 @@
 import React, {Component} from "react";
+import {Image, View} from "react-native";
 import {
-    Platform,
-    StyleSheet,
-    View,
-    Image,
-    Modal,
-    TouchableOpacity
-} from "react-native";
-import {
-    Container,
-    Header,
-    Content,
-    Button,
-    Text,
-    Form,
-    Item,
-    Label,
-    Input,
-    Icon,
     Body,
-    Left,
-    Right,
-    Drawer,
+    Button,
     Card,
     CardItem,
-    Thumbnail,
-    List
+    Container,
+    Content,
+    Drawer,
+    Form,
+    Header,
+    Icon,
+    Input,
+    Item,
+    Label,
+    Left,
+    List,
+    Right,
+    Text,
+    Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
-import {Actions} from "react-native-router-flux";
-import ImageViewer from "react-native-image-view";
 import TimeAgo from "javascript-time-ago";
 import pl from "javascript-time-ago/locale/pl";
 import Moment from "moment";
@@ -38,6 +29,25 @@ TimeAgo.locale(pl);
 const timeAgo = new TimeAgo("pl-PL");
 
 class HomeScene extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+
+        }
+    }
+    closeDrawer = () => {
+        this
+            .drawer
+            ._root
+            .close();
+    };
+    openDrawer = () => {
+        this
+            .drawer
+            ._root
+            .open();
+    };
+
     render() {
         return (
             <Container>
@@ -71,9 +81,9 @@ class HomeScene extends Component {
                                 <Left>
                                     <Thumbnail
                                         small
-                                        source={{
-                                            uri: this.props.post.user.link
-                                        }}/>
+                                        source={
+                                              (this.props.post.user.link==null)?require('../img/user.jpg'):{uri: this.props.post.user.link}
+                                        }/>
                                     <Body>
                                     <Text>
                                         {this.props.post.user.firstname + " " + this.props.post.user.lastname}
@@ -108,7 +118,7 @@ class HomeScene extends Component {
                             <CardItem>
                                 <Left>
                                     <Button transparent>
-                                        <Icon active name="thumbs-up"/>
+                                        <Icon active name={this.props.post.likes.includes(this.props.user.id)?"ios-thumbs-up":"ios-thumbs-up-outline"}/>
                                         <Text>{this.props.post.likes.length + " Likes"}</Text>
                                     </Button>
                                 </Left>
@@ -125,12 +135,19 @@ class HomeScene extends Component {
                                 </Left>
                             </CardItem>
                             <CardItem>
-                                <Left>
+                                <View style={{
+                                    flexDirection:"row",
+                                    justifyContent: "space-between",
+                                    alignItems:"center",
+                                    width:"100%"  
+                                }}>
                                     <Thumbnail
                                         small
-                                        source={{
-                                            uri: this.props.post.user.link
-                                        }}
+                                        source={(this.props.user.link == null)
+                                            ? require('../img/user.jpg')
+                                            : {
+                                                uri: this.props.user.link
+                                            }}
                                         style={{
                                             marginRight: 10
                                         }}/>
@@ -138,9 +155,12 @@ class HomeScene extends Component {
                                         placeholder={"Dodaj Komentarz..."}
                                         style={{
                                             backgroundColor: "#fafafa",
-                                            borderRadius: 20
+                                            borderRadius: 20, marginRight:20
                                         }}/>
-                                </Left>
+                                        <Button>
+                                        <Icon name="send"/>
+                                        </Button>
+                                </View>
                             </CardItem>
                             <List
                                 dataArray={this.props.post.comments}
@@ -149,7 +169,11 @@ class HomeScene extends Component {
                                         <Left>
                                             <Thumbnail
                                                 small
-                                                source={item.link}
+                                                source={(item.link == null)
+                                                    ? require('../img/user.jpg')
+                                                    : {
+                                                        uri: item.link
+                                                    }}
                                                 style={{
                                                     marginRight: 10
                                                 }}/>
@@ -163,19 +187,6 @@ class HomeScene extends Component {
             </Container>
         );
     }
-
-    closeDrawer = () => {
-        this
-            .drawer
-            ._root
-            .close();
-    };
-    openDrawer = () => {
-        this
-            .drawer
-            ._root
-            .open();
-    };
 }
 
 export default HomeScene;

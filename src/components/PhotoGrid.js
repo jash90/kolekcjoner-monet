@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Image, Dimensions, Modal, TouchableWithoutFeedback, ScrollView} from 'react-native';
+import {Dimensions, Image, Modal, ScrollView, TouchableWithoutFeedback, View} from 'react-native';
 import * as _ from 'lodash';
 
 class PhotoGrid extends Component {
@@ -107,7 +107,6 @@ class PhotoGrid extends Component {
                             onPressIn={() => {
                                 this.photoPopupToggle(row[0])
                             }}
-                            on
                             onPressOut={() => {
                                 this.photoOut()
                             }}>

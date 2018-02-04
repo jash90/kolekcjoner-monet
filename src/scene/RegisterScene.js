@@ -1,26 +1,19 @@
 import React, {Component} from 'react';
+import {ToastAndroid, View} from 'react-native'
 import {
-    Platform,
-    StyleSheet,
-    View,
-    ToastAndroid,
-    Modal,
-    ActivityIndicator
-} from 'react-native'
-import {
-    Container,
-    Header,
-    Content,
+    Body,
     Button,
+    Container,
+    Content,
+    Drawer,
     Form,
+    Header,
+    Icon,
+    Input,
     Item,
     Label,
-    Input,
-    Icon,
-    Body,
     Left,
-    Text,
-    Drawer
+    Text
 } from 'native-base';
 import firebase from 'react-native-firebase';
 import {Actions} from 'react-native-router-flux';
@@ -30,7 +23,8 @@ class LoginScene extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: '',
+            firstname: '',
+            lastname: '',
             email: '',
             password: '',
             repeatpassword: '',
@@ -44,28 +38,34 @@ class LoginScene extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Text
-                        style={{
+                        <Text
+                            style={{
                             color: '#fff'
                         }}>Kolekcjoner Monet</Text>
                     </Body>
                 </Header>
                 <View
                     style={{
-                        margin: 16,
-                        justifyContent: 'space-around'
-                    }}>
+                    margin: 16,
+                    justifyContent: 'space-around'
+                }}>
                     <Body style={{
                         margin: 20
                     }}>
-                    <Text>Rejestracja</Text>
+                        <Text>Rejestracja</Text>
                     </Body>
                     <Form>
                         <Item floatingLabel>
-                            <Label>Login</Label>
+                            <Label>Firstname</Label>
                             <Input
-                                value={this.state.login}
-                                onChangeText={(text) => this.setState({login: text})}/>
+                                value={this.state.firstname}
+                                onChangeText={(text) => this.setState({firstname: text})}/>
+                        </Item>
+                        <Item floatingLabel>
+                            <Label>Lastname</Label>
+                            <Input
+                                value={this.state.lastname}
+                                onChangeText={(text) => this.setState({lastname: text})}/>
                         </Item>
                         <Item floatingLabel>
                             <Label>Email</Label>
@@ -91,8 +91,8 @@ class LoginScene extends Component {
                     <Button
                         block
                         style={{
-                            marginTop: 20
-                        }}
+                        marginTop: 20
+                    }}
                         onPress={() => this.onRegister()}>
                         <Text>
                             Zarejestruj
@@ -105,8 +105,12 @@ class LoginScene extends Component {
     }
 
     onRegister() {
-        if (this.state.login === '') {
-            alert('Podaj Login');
+        if (this.state.firstname === '') {
+            alert('Podaj Imię');
+            return;
+        }
+        if (this.state.lastname === '') {
+            alert('Podaj Nazwisko');
             return;
         }
         if (this.state.email === '') {

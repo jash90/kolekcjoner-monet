@@ -1,45 +1,86 @@
 import React, {Component} from "react";
+import {Image, TouchableOpacity, View} from "react-native";
 import {
-    Platform,
-    StyleSheet,
-    View,
-    Image,
-    Modal,
-    TouchableOpacity,
-    AsyncStorage
-} from "react-native";
-import {
-    Container,
-    Header,
-    Content,
-    Button,
-    Text,
-    Form,
-    Item,
-    Label,
-    Input,
-    Icon,
     Body,
-    Left,
-    Right,
-    Drawer,
+    Button,
     Card,
     CardItem,
-    Thumbnail,
-    List
+    Container,
+    Content,
+    Drawer,
+    Form,
+    Header,
+    Icon,
+    Input,
+    Item,
+    Label,
+    Left,
+    List,
+    Right,
+    Text,
+    Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
 import {Actions} from "react-native-router-flux";
-import ImageViewer from "react-native-image-view";
 import firebase from "react-native-firebase";
 import Moment from "moment";
 import TimeAgo from "javascript-time-ago";
 import pl from "javascript-time-ago/locale/pl";
-
+import LoadingList from '../components/LoadingList';
 TimeAgo.locale(pl);
 const timeAgo = new TimeAgo("pl-PL");
 
 class HomeScene extends Component {
+    onCollectionUpdate = (querySnapshot) => {
+        console.log(querySnapshot);
+        const posts = [];
+        const tab = [];
+        this.setState({loading:true});
+        querySnapshot.forEach(doc => {
+            tab.push(doc);
+        });
+        tab.forEach(doc => {
+            var post = doc.data();
+            post.id = doc.id;
+            post
+                .idusers
+                .get()
+                .then(user => {
+                    post.user = user.data();
+                    post.user.id = user.id;
+                    firebase
+                        .storage()
+                        .ref(post.user.id + ".jpg")
+                        .getDownloadURL()
+                        .then(url => {
+                            post.user.link = url;
+                            firebase
+                                .storage()
+                                .ref(post.id + ".jpg")
+                                .getDownloadURL()
+                                .then(url => {
+                                    post.link = url;
+                                    posts.push(post);
+                                    this.setState({posts});
+                                    this.setState({loading:false});
+                                });
+                        });
+                });
+        });
+    };
+    closeDrawer = () => {
+        this
+            .drawer
+            ._root
+            .close();
+    };
+    openDrawer = () => {
+        this
+            .drawer
+            ._root
+            .open();
+    };
+
     constructor(props) {
         super(props);
         this.ref = firebase
@@ -64,38 +105,6 @@ class HomeScene extends Component {
     componentWillUnmount() {
         this.unsubscribe();
     }
-
-    onCollectionUpdate = (querySnapshot) => {
-        console.log(querySnapshot);
-        const posts = [];
-        querySnapshot.forEach(doc => {
-            var post = doc.data();
-            post.id = doc.id;
-            post
-                .idusers
-                .get()
-                .then(user => {
-                    post.user = user.data();
-                    post.user.id = user.id;
-                    firebase
-                        .storage()
-                        .ref(post.user.id + ".jpg")
-                        .getDownloadURL()
-                        .then(url => {
-                            post.user.link = url;
-                            firebase
-                                .storage()
-                                .ref(post.id + ".jpg")
-                                .getDownloadURL()
-                                .then(url => {
-                                    post.link = url;
-                                    posts.push(post);
-                                    this.setState({posts});
-                                });
-                        });
-                });
-        });
-    };
 
     render() {
         return (
@@ -124,9 +133,16 @@ class HomeScene extends Component {
                     }}
                     content={< SideBar/>}
                     onClose={() => this.closeDrawer()}>
-                    <Content>
+                    <Content style={{backgroundColor:"#fff"}}>
+                    <LoadingList 
+                        loading={this.state.loading}
+                        condition={this.state.posts.length==0}
+                        text={"Brak Postów"}
+                        loadingText={"Loading"}
+                        >
                         <List
                             dataArray={this.state.posts}
+                            style={{width:"100%"}}
                             renderRow={item => (
                                 <Card style={{
                                     flex: 1
@@ -140,9 +156,9 @@ class HomeScene extends Component {
                                                 }}>
                                                 <Thumbnail
                                                     small
-                                                    source={{
-                                                        uri: item.user.link
-                                                    }}/>
+                                                    source={
+                                                         (item.user.link==null)?require('../img/user.jpg'):{uri: item.user.link}
+                                                    }/>
                                             </View>
                                         </TouchableOpacity>
                                         <Body>
@@ -164,7 +180,7 @@ class HomeScene extends Component {
                                             style={{
                                                 flex: 1
                                             }}
-                                            onPress={() => Actions.PostDetails({post: item})}>
+                                            onPress={() => Actions.PostDetails({post: item, user : this.props.user})}>
                                             <View style={{
                                                 flex: 1
                                             }}>
@@ -204,24 +220,12 @@ class HomeScene extends Component {
                                     </CardItem>
                                 </Card>
                             )}/>
+                            </LoadingList>
                     </Content>
                 </Drawer>
             </Container>
         );
     }
-
-    closeDrawer = () => {
-        this
-            .drawer
-            ._root
-            .close();
-    };
-    openDrawer = () => {
-        this
-            .drawer
-            ._root
-            .open();
-    };
 
 }
 

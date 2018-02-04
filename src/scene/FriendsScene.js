@@ -1,32 +1,34 @@
 import React, {Component} from "react";
-import {Platform, StyleSheet, View, Image} from "react-native";
+import {View} from "react-native";
 import {
-    Container,
-    Header,
-    Content,
+    Body,
     Button,
-    Text,
+    Container,
+    Content,
+    Drawer,
     Form,
+    Header,
+    Icon,
+    Input,
     Item,
     Label,
-    Input,
-    Icon,
-    Body,
     Left,
-    Right,
-    Drawer,
+    List,
     ListItem,
-    Thumbnail,
-    List
+    Right,
+    Text,
+    Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
 import firebase from "react-native-firebase";
+import LoadingList from '../components/LoadingList';
 
 class FriendsScene extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            followers: []
+            followers: [],
+            loading:true
         };
         this.ref = firebase
             .firestore()
@@ -35,7 +37,8 @@ class FriendsScene extends Component {
         this.unsubscribe = null;
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
+        console.log(this.props.userId);
         this.unsubscribe = this
             .ref
             .onSnapshot(this.onCollectionUpdate);
@@ -44,26 +47,6 @@ class FriendsScene extends Component {
     componentWillUnmount() {
         this.unsubscribe();
     }
-
-    onCollectionUpdate = querySnapshot => {
-        const followers = [];
-        firebase
-            .firestore()
-            .doc("followers/NbcZVRCcpRWAjOsx47L7CJArCH83")
-            .get()
-            .then(doc => {
-                const {users} = doc.data();
-                users.forEach(user => {
-                    user
-                        .get()
-                        .then(e => {
-                            followers.push(e.data());
-                            this.setState({followers});
-                        });
-                });
-            });
-
-    };
 
     render() {
         return (
@@ -74,65 +57,117 @@ class FriendsScene extends Component {
                             <Icon
                                 name={"ios-menu"}
                                 style={{
-                                    color: "#fff"
-                                }}/>
+                                color: "#fff"
+                            }}/>
                         </Button>
                     </Left>
                     <Body>
-                    <Text style={{
-                        color: "#fff"
-                    }}>
-                        Znajomi
-                    </Text>
+                        <Text
+                            style={{
+                            color: "#fff"
+                        }}>
+                            Obserwujący
+                        </Text>
                     </Body>
                 </Header>
                 <Drawer
                     ref={ref => {
-                        this.drawer = ref;
-                    }}
-                    content={< SideBar/>}
+                    this.drawer = ref;
+                }}
+                    content={< SideBar />}
                     onClose={() => this.closeDrawer()}>
-                    <Content style={{
+                    <Content
+                        style={{
                         backgroundColor: "#fff"
                     }}>
+                      <LoadingList 
+                        loading={this.state.loading}
+                        condition={this.state.followers.length==0}
+                        text={"Brak Postów"}
+                        loadingText={"Loading"}
+                        >
                         <List
                             dataArray={this.state.followers}
+                            style={{
+                                width:"100%"
+                            }}
                             renderRow={(item) => (
+                            <View
+                                style={{
+                                justifyContent: "flex-start",
+                                flexDirection: "row",
+                                
+                            }}>
                                 <View
                                     style={{
-                                        justifyContent: "center",
-                                        flexDirection: "row",
-                                        alignSelf: "flex-start"
-                                    }}>
-                                    <View style={{
-                                        justifyContent: "center"
-                                    }}>
-                                        <Icon
-                                            name={"ios-contact"}
-                                            style={{
-                                                fontSize: 60,
-                                                marginLeft: 10,
-                                                marginRight: 10
-                                            }}/>
-                                    </View>
-                                    <View
+                                    justifyContent: "center"
+                                }}>
+                                    <Thumbnail
+                                        small
+                                        source={(item.link == null)
+                                        ? require('../img/user.jpg')
+                                        : {
+                                            uri: item.link
+                                        }}
                                         style={{
-                                            alignItems: "flex-start",
-                                            justifyContent: "center"
-                                        }}>
-                                        <Text>{item.firstname + " " + item.lastname}</Text>
-                                        <Text note>
-                                            {"Miasto: " + item.city + " Email: " + item.email}
-                                        </Text>
-                                    </View>
+                                            margin:10
+                                        }}
+                                       />
                                 </View>
-                            )}/>
+                                <View
+                                    style={{
+                                    alignItems: "flex-start",
+                                    justifyContent: "center"
+                                }}>
+                                    <Text>{item.firstname + " " + item.lastname}</Text>
+                                    <Text note>
+                                        {"Miasto: " + item.city + " Email: " + item.email}
+                                    </Text>
+                                </View>
+                            </View>
+                        )}/>
+                        </LoadingList>
                     </Content>
                 </Drawer>
             </Container>
         );
     }
+    onCollectionUpdate = (querySnapshot) => {
+        console.log(this.props.user);
+        const followers = [];
+        this.setState({loading:true});
+        firebase
+            .firestore()
+            .doc("followers/" + this.props.user.id)
+            .get()
+            .then(doc => {
+                const {users} = doc.data();
+                users.forEach(user => {
+                    user
+                        .get()
+                        .then(e => {
+                            var user = e.data();
+                            firebase
+                            .storage()
+                            .ref(e.id + ".jpg")
+                            .getDownloadURL()
+                            .then(url => {
+                               
+                                user.link = url;
 
+                            })
+                            .finally(()=>{
+                                followers.push(user);
+                                this.setState({followers});
+                                this.setState({loading:false});
+                            });
+                           
+                        });
+
+                });
+
+            });
+    }
     closeDrawer = () => {
         this
             .drawer

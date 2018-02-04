@@ -1,12 +1,5 @@
 import React, {Component} from "react";
-import {
-    View,
-    Modal,
-    Image,
-    Text,
-    StyleSheet,
-    TouchableOpacity
-} from "react-native";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 class ImagePlaceholder extends Component {
     constructor(props) {
