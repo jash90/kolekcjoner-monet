@@ -27,6 +27,7 @@ import Moment from "moment";
 import TimeAgo from "javascript-time-ago";
 import pl from "javascript-time-ago/locale/pl";
 import LoadingList from '../components/LoadingList';
+import _ from 'lodash';
 TimeAgo.locale(pl);
 const timeAgo = new TimeAgo("pl-PL");
 
@@ -42,6 +43,7 @@ class HomeScene extends Component {
     this.state = {
       loading: true,
       posts: [],
+      posts2:[],
       image: "",
       name: ""
     };
@@ -62,37 +64,50 @@ class HomeScene extends Component {
     const posts = [];
     const tab = [];
     this.setState({loading: true});
-    querySnapshot.forEach(doc => {
-      tab.push(doc);
-    });
-    tab.forEach(doc => {
-      var post = doc.data();
-      post.id = doc.id;
-      post
-        .idusers
-        .get()
-        .then(user => {
-          post.user = user.data();
-          post.user.id = user.id;
-          firebase
-            .storage()
-            .ref(post.user.id + ".jpg")
-            .getDownloadURL()
-            .then(url => {
-              post.user.link = url;
-              firebase
-                .storage()
-                .ref(post.id + ".jpg")
-                .getDownloadURL()
-                .then(url => {
-                  post.link = url;
-                  posts.push(post);
-                  this.setState({posts});
-                  this.setState({loading: false});
-                });
-            });
-        });
-    });
+    querySnapshot
+      .docChanges
+      .forEach(doc => {
+        tab.push(doc);
+        // console.log(doc.type)
+        if (doc.type == "added") {
+          console.log("ADD");
+          var p = this.state.posts;
+          console.log(doc.doc);
+          var pp = doc.doc.data();
+          pp.id = doc.doc.id;
+          console.log(pp);
+          p.push(pp);
+          this.setState({posts:p});
+        }
+        if (doc.type == "modified") {
+          console.log("MOD");
+          console.log(doc.doc.data());
+        }
+        if (doc.type == "removed") {
+          console.log("REM");
+          this.state.posts.forEach((value)=>{
+            console.log(value);
+            if (value.id==doc.doc.id){
+              console.log("REM",value);
+              var p = this.state.posts.splice(this.state.posts.indexOf(value),1);
+              this.setState({posts:p});
+              console.log(this.state.posts);
+            }
+          });
+        }
+        
+      });
+    // for (var i=0;i<querySnapshot.docChanges.length;i++){   var doc  =
+    // querySnapshot.docChanges[0]; } var post = doc.data(); post.id = doc.id; post
+    //  .idusers   .get()   .then(user => {     post.user = user.data();
+    // post.user.id = user.id;     firebase       .storage()       .ref(post.user.id
+    // + ".jpg")       .getDownloadURL()       .then(url => {         post.user.link
+    // = url;         firebase           .storage()           .ref(post.id + ".jpg")
+    //           .getDownloadURL()           .then(url => {             post.link =
+    // url;             console.log(url);             posts.push(post);
+    // this.setState({posts});             this.setState({loading: false});
+    //  });       });   });
+
   };
   render() {
     return (
@@ -128,7 +143,7 @@ class HomeScene extends Component {
               text={"Brak Postów"}
               loadingText={"Loading"}>
               <List
-                dataArray={this.state.posts}
+                dataArray={this.state.posts2}
                 style={{
                 width: "100%"
               }}
