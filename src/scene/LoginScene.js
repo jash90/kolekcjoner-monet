@@ -168,7 +168,7 @@ class LoginScene extends Component {
                 this.saveUserID(data.uid);
 
                 this.saveloginhaslo(this.state.login, this.state.password);
-                ToastAndroid.show("Zalogowałes sie jako " + data.email + " .", ToastAndroid.SHORT);
+                ToastAndroid.show("Zalogowałes sie jako " + data.email + ".", ToastAndroid.SHORT);
                 firebase
                     .firestore()
                     .doc("users/" + data.uid)

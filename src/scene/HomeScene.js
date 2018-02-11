@@ -61,42 +61,72 @@ class HomeScene extends Component {
 
   onCollectionUpdate = querySnapshot => {
     console.log(querySnapshot);
-    const posts = [];
+    const posts = this.state.posts;
     const tab = [];
     this.setState({loading: true});
-    querySnapshot
-      .docChanges
-      .forEach(doc => {
-        tab.push(doc);
-        // console.log(doc.type)
-        if (doc.type == "added") {
-          console.log("ADD");
-          var p = this.state.posts;
-          console.log(doc.doc);
-          var pp = doc.doc.data();
-          pp.id = doc.doc.id;
-          console.log(pp);
-          p.push(pp);
-          this.setState({posts:p});
-        }
-        if (doc.type == "modified") {
-          console.log("MOD");
-          console.log(doc.doc.data());
-        }
-        if (doc.type == "removed") {
-          console.log("REM");
-          this.state.posts.forEach((value)=>{
-            console.log(value);
-            if (value.id==doc.doc.id){
-              console.log("REM",value);
-              var p = this.state.posts.splice(this.state.posts.indexOf(value),1);
-              this.setState({posts:p});
-              console.log(this.state.posts);
-            }
-          });
-        }
-        
-      });
+    querySnapshot.docChanges.forEach(doc => {
+      // tab.push(doc);
+       // console.log(doc.type)
+       if (doc.type == "added") {
+               var post = doc.doc.data();
+        post.id = doc.doc.id;
+        post
+          .idusers
+          .get()
+          .then(user => {
+            post.user = user.data();
+            post.user.id = user.id;
+            firebase
+              .storage()
+              .ref(post.user.id + ".jpg")
+              .getDownloadURL()
+              .then(url => {
+                post.user.link = url;
+                firebase
+                  .storage()
+                  .ref(post.id + ".jpg")
+                  .getDownloadURL()
+                  .then(url => {
+                    post.link = url;
+                    posts.push(post);
+                    posts.sort(function(a,b){
+                    return a.dateupdate-b.date;
+                    });
+                    this.setState({ posts });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                    console.log(user);
+                  });
+              })
+              .catch(error => {
+                console.log(error);
+                  console.log(user);
+              });
+             })
+             .catch((error)=>{
+               console.log(error);
+                 console.log(post);
+             });
+ 
+       }
+       if (doc.type == "modified") {
+         // console.log("MOD");
+         // console.log(doc.doc.data());
+       }
+       if (doc.type == "removed") {
+         console.log("REM");
+         // this.state.posts.forEach((value)=>{
+         //   console.log(value);
+         //   if (value.id==doc.doc.id){
+         //     console.log("REM",value);
+         //     var p = this.state.posts.splice(this.state.posts.indexOf(value),1);
+         //     this.setState({posts:p});
+         //     console.log(this.state.posts);
+         //   }
+         // });
+       }
+     });
     // for (var i=0;i<querySnapshot.docChanges.length;i++){   var doc  =
     // querySnapshot.docChanges[0]; } var post = doc.data(); post.id = doc.id; post
     //  .idusers   .get()   .then(user => {     post.user = user.data();
@@ -137,13 +167,8 @@ class HomeScene extends Component {
           <Content style={{
             backgroundColor: "#fff"
           }}>
-            <LoadingList
-              loading={this.state.loading}
-              condition={this.state.posts.length == 0}
-              text={"Brak Postów"}
-              loadingText={"Loading"}>
               <List
-                dataArray={this.state.posts2}
+                dataArray={this.state.posts}
                 style={{
                 width: "100%"
               }}
@@ -233,7 +258,6 @@ class HomeScene extends Component {
                   </CardItem>
                 </Card>
               )}/>
-            </LoadingList>
           </Content>
         </Drawer>
       </Container>

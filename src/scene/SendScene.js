@@ -188,7 +188,7 @@ class SendScene extends Component {
                             .then((successCb) => {
                                 console.log(successCb);
                                 this.setState({visible: false});
-                                Actions.HomeScene();
+                                Actions.HomeScene({user:this.props.user});
                             })
                             .catch((failureCb) => {
                                 console.log(failureCb);
