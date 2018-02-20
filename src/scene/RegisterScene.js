@@ -50,23 +50,11 @@ class LoginScene extends Component {
                     justifyContent: 'space-around'
                 }}>
                     <Body style={{
-                        margin: 20
+                        margin: 10
                     }}>
                         <Text>Rejestracja</Text>
                     </Body>
                     <Form>
-                        <Item floatingLabel>
-                            <Label>Firstname</Label>
-                            <Input
-                                value={this.state.firstname}
-                                onChangeText={(text) => this.setState({firstname: text})}/>
-                        </Item>
-                        <Item floatingLabel>
-                            <Label>Lastname</Label>
-                            <Input
-                                value={this.state.lastname}
-                                onChangeText={(text) => this.setState({lastname: text})}/>
-                        </Item>
                         <Item floatingLabel>
                             <Label>Email</Label>
                             <Input

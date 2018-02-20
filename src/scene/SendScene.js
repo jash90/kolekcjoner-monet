@@ -113,7 +113,7 @@ class SendScene extends Component {
                                 borderRadius: 20,
                                 padding: 10,
                                 width: "100%",
-                                height: 200,
+                                height: 100,
                                 textAlignVertical: "top"
                             }}
                                 value={this.state.description}
