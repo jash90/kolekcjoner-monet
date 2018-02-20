@@ -89,6 +89,9 @@ class HomeScene extends Component {
                   .then(url => {
                     post.link = url;
                     posts.push(post);
+                    posts.sort(function(a,b){
+                      return Moment(b.dateupdate).unix() - Moment(a.dateupdate).unix();
+                    });
                     this.setState({ posts });
                   })
                   .catch(error => {
@@ -165,9 +168,7 @@ class HomeScene extends Component {
             backgroundColor: "#fff"
           }}>
               <List
-                dataArray={this.state.posts.sort(function(a,b){
-                  return a.dateupdate-b.date;
-                  })}
+                dataArray={this.state.posts}
                 style={{
                 width: "100%"
               }}
