@@ -40,6 +40,10 @@ class EditScene extends Component {
             loading: false
         }
     }
+    componentDidMount = () => {
+        const user  = this.props.user;
+        this.setState({ firstname: user.firstname, lastname: user.lastname, email:user.email,city:user.city, uri:user.link});
+    }
 
     render() {
         return (
@@ -87,7 +91,7 @@ class EditScene extends Component {
                                     marginBottom: 10
                                 }}>
                                 <ImagePlaceholder
-                                    source={this.state.uri}
+                                    source={{uri : this.state.uri}}
                                     textPlaceholder="Wybierz zdjęcie"
                                 />
                             </View>
