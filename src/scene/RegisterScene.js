@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ToastAndroid, View} from 'react-native'
+import {ToastAndroid, View, ScrollView} from 'react-native'
 import {
     Body,
     Button,
@@ -25,6 +25,7 @@ class LoginScene extends Component {
         this.state = {
             firstname: '',
             lastname: '',
+            city:'',
             email: '',
             password: '',
             repeatpassword: '',
@@ -34,62 +35,66 @@ class LoginScene extends Component {
     }
 
     render() {
-        return (
-            <Container>
-                <Header>
-                    <Body>
-                        <Text
-                            style={{
-                            color: '#fff'
-                        }}>Kolekcjoner Monet</Text>
-                    </Body>
-                </Header>
-                <View
-                    style={{
-                    margin: 16,
-                    justifyContent: 'space-around'
+        return <Container>
+            <Header>
+              <Body>
+                <Text style={{ color: "#fff" }}>Kolekcjoner Monet</Text>
+              </Body>
+            </Header>
+            <ScrollView>
+              <Container>
+                <View style={{
+                    justifyContent:"center",
+                    alignItems:"center",
+                    margin:10
                 }}>
-                    <Body style={{
-                        margin: 10
-                    }}>
-                        <Text>Rejestracja</Text>
-                    </Body>
-                    <Form>
-                        <Item floatingLabel>
-                            <Label>Email</Label>
-                            <Input
-                                value={this.state.email}
-                                onChangeText={(text) => this.setState({email: text})}/>
-                        </Item>
-                        <Item floatingLabel last>
-                            <Label>Hasło</Label>
-                            <Input
-                                value={this.state.password}
-                                secureTextEntry={true}
-                                onChangeText={(text) => this.setState({password: text})}/>
-                        </Item>
-                        <Item floatingLabel last>
-                            <Label>Powtórz hasło</Label>
-                            <Input
-                                value={this.state.repeatpassword}
-                                secureTextEntry={true}
-                                onChangeText={(text) => this.setState({repeatpassword: text})}/>
-                        </Item>
-                    </Form>
-                    <Button
-                        block
-                        style={{
-                        marginTop: 20
-                    }}
-                        onPress={() => this.onRegister()}>
-                        <Text>
-                            Zarejestruj
-                        </Text>
-                    </Button>
-                    <ModalLoading visible={this.state.loading} text={"Rejestracja..."}/>
+                  <Text>Rejestracja</Text>
                 </View>
-            </Container>
-        );
+                <View style={{marginTop:0, marginLeft:20, marginRight:20, marginBottom:10}}>
+                  <Item floatingLabel>
+                    <Label>Imię</Label>
+                    <Input value={this.state.firstname} onChangeText={text => this.setState(
+                          { firstname: text }
+                        )} />
+                  </Item>
+                  <Item floatingLabel>
+                    <Label>Nazwisko</Label>
+                    <Input value={this.state.lastname} onChangeText={text => this.setState(
+                          { lastname: text }
+                        )} />
+                  </Item>
+                  <Item floatingLabel>
+                    <Label>Miasto</Label>
+                    <Input value={this.state.city} onChangeText={text => this.setState(
+                          { city: text }
+                        )} />
+                  </Item>
+                  <Item floatingLabel>
+                    <Label>Email</Label>
+                    <Input value={this.state.email} onChangeText={text => this.setState(
+                          { email: text }
+                        )} />
+                  </Item>
+                  <Item floatingLabel>
+                    <Label>Hasło</Label>
+                    <Input value={this.state.password} secureTextEntry={true} onChangeText={text => this.setState(
+                          { password: text }
+                        )} />
+                  </Item>
+                  <Item floatingLabel>
+                    <Label>Powtórz hasło</Label>
+                    <Input value={this.state.repeatpassword} secureTextEntry={true} onChangeText={text => this.setState(
+                          { repeatpassword: text }
+                        )} />
+                  </Item>
+                </View>
+                <Button block style={{ margin: 20 }} onPress={() => this.onRegister()}>
+                  <Text>Zarejestruj</Text>
+                </Button>
+                <ModalLoading visible={this.state.loading} text={"Rejestracja..."} />
+              </Container>
+            </ScrollView>
+          </Container>;
     }
 
     onRegister() {

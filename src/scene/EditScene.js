@@ -33,6 +33,7 @@ class EditScene extends Component {
             firstname: '',
             lastname: '',
             email: '',
+            city:'',
             password: '',
             repeatpassword: '',
             error: '',
@@ -94,14 +95,14 @@ class EditScene extends Component {
                                 <Item floatingLabel>
                                     <Label>Imię</Label>
                                     <Input
-                                        value={this.state.email}
-                                        onChangeText={(text) => this.setState({ email: text })} />
+                                        value={this.state.firstname}
+                                        onChangeText={(text) => this.setState({ firstname: text })} />
                                 </Item>
                                 <Item floatingLabel>
                                     <Label>Nazwisko</Label>
                                     <Input
-                                        value={this.state.email}
-                                        onChangeText={(text) => this.setState({ email: text })} />
+                                        value={this.state.lastname}
+                                        onChangeText={(text) => this.setState({ lastname: text })} />
                                 </Item>
                                 <Item floatingLabel>
                                     <Label>Email</Label>
@@ -112,8 +113,8 @@ class EditScene extends Component {
                                 <Item floatingLabel>
                                     <Label>Miasto</Label>
                                     <Input
-                                        value={this.state.email}
-                                        onChangeText={(text) => this.setState({ email: text })} />
+                                        value={this.state.city}
+                                        onChangeText={(text) => this.setState({ city: text })} />
                                 </Item>
                                 <Item floatingLabel last>
                                     <Label>Hasło</Label>

@@ -95,7 +95,7 @@ class SideBar extends Component {
             </Body>
           </ListItem>
           <ListItem itemDivider/>
-          <ListItem icon onPress={() => Actions.EditScene()}>
+          <ListItem icon onPress={() => Actions.EditScene({user: this.state.user})}>
             <Left>
               <Icon name="md-contact" />
             </Left>
