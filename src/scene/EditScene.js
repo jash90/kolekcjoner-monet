@@ -26,6 +26,8 @@ import firebase from 'react-native-firebase';
 import ModalLoading from '../components/ModalLoading';
 import { Actions } from "react-native-router-flux";
 
+import Separator from '@components/separator'
+
 class EditScene extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +35,7 @@ class EditScene extends Component {
             firstname: '',
             lastname: '',
             email: '',
-            city:'',
+            city: '',
             password: '',
             repeatpassword: '',
             error: '',
@@ -41,8 +43,8 @@ class EditScene extends Component {
         }
     }
     componentDidMount = () => {
-        const user  = this.props.user;
-        this.setState({ firstname: user.firstname, lastname: user.lastname, email:user.email,city:user.city, uri:user.link});
+        const user = this.props.user;
+        this.setState({ firstname: user.firstname, lastname: user.lastname, email: user.email, city: user.city, uri: user.link });
     }
 
     render() {
@@ -91,10 +93,11 @@ class EditScene extends Component {
                                     marginBottom: 10
                                 }}>
                                 <ImagePlaceholder
-                                    source={{uri : this.state.uri}}
+                                    source={{ uri: this.state.uri }}
                                     textPlaceholder="Wybierz zdjęcie"
                                 />
                             </View>
+                            <Separator title="Zmiana danych"/>
                             <Form>
                                 <Item floatingLabel>
                                     <Label>Imię</Label>
@@ -120,6 +123,20 @@ class EditScene extends Component {
                                         value={this.state.city}
                                         onChangeText={(text) => this.setState({ city: text })} />
                                 </Item>
+                            </Form>
+                            <Button
+                                block
+                                style={{
+                                    marginTop: 20,
+                                    marginBottom: 20
+                                }}
+                                onPress={() => this.onRegister()}>
+                                <Text>
+                                    Zapisz dane
+                        </Text>
+                            </Button>
+                            <Separator title="Zmień hasło"/>
+                            <Form>
                                 <Item floatingLabel last>
                                     <Label>Hasło</Label>
                                     <Input
@@ -142,7 +159,7 @@ class EditScene extends Component {
                                 }}
                                 onPress={() => this.onRegister()}>
                                 <Text>
-                                    Zapisz
+                                    Zmień hasło
                         </Text>
                             </Button>
                         </View>

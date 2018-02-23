@@ -51,7 +51,7 @@ class SideBar extends Component {
                 user.link = url;
 
               })
-              . finally(() => {
+              .finally(() => {
                 this.setState({user});
                 console.log(user);
               });
@@ -116,7 +116,7 @@ class SideBar extends Component {
               <Icon name="ios-heart"/>
             </Left>
             <Body>
-              <Text>Ulubione kolekcje</Text>
+              <Text>Ulubione Monety</Text>
             </Body>
           </ListItem>
           <ListItem itemDivider/>

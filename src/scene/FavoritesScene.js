@@ -194,6 +194,7 @@ class FavoritesScene extends Component {
                                     </Button>
                                 </Body>
                             </CardItem>
+                            {this.renderDescription(item.description.length)}
                         </Card>}/>
                     </LoadingList>
                 </Content>
@@ -212,7 +213,15 @@ class FavoritesScene extends Component {
             ._root
             .open();
     };
-
+    renderDescription(length){
+        if (length>0){
+            return (<CardItem>
+                <Left>
+                    <Text style={{ paddingBottom: 20 }}>{item.description}</Text>
+                </Left>
+            </CardItem>)
+        }
+    }
 }
 
 export default FavoritesScene;

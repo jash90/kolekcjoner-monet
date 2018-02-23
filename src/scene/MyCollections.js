@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {View, Image, ActivityIndicator} from "react-native";
+import React, { Component } from "react";
+import { View, Image, ActivityIndicator, AsyncStorage } from "react-native";
 import {
     Body,
     Button,
@@ -21,11 +21,11 @@ import {
     Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
-import {PhotoGrid} from "../components/PhotoGrid";
+import { PhotoGrid } from "../components/PhotoGrid";
 import ModalImage from "../components/ModalImage";
 import ModalLoading from '../components/ModalLoading';
 import firebase from "react-native-firebase";
-
+import { Actions } from 'react-native-router-flux';
 import LoadingList from '../components/LoadingList';
 
 class MyCollections extends Component {
@@ -46,7 +46,7 @@ class MyCollections extends Component {
         try {
             const value = await AsyncStorage.getItem('@UserId:key');
             if (value !== null) {
-                this.setState({myId: value});
+                this.setState({ myId: value });
                 console.log(this.state.myId);
                 console.log(this.props.user.id);
                 console.log(this.state.myId == this.props.user.id);
@@ -54,14 +54,13 @@ class MyCollections extends Component {
         } catch (error) {
             console.log(error);
         }
-
         var ref = firebase
             .firestore()
             .doc("users/" + this.props.user.id);
         console.log(ref);
         const postss = [];
         var photos = [];
-        this.setState({loading: true});
+        this.setState({ loading: true });
         firebase
             .firestore()
             .collection("posts")
@@ -79,8 +78,8 @@ class MyCollections extends Component {
                             post.link = url;
                             postss.push(posts);
                             photos.push(url);
-                            this.setState({postss});
-                            this.setState({photos});
+                            this.setState({ postss });
+                            this.setState({ photos });
                             console.log(posts);
                         })
                         .catch((error) => {
@@ -90,8 +89,8 @@ class MyCollections extends Component {
 
                 });
             })
-            . finally(() => {
-                this.setState({loading: false});
+            .finally(() => {
+                this.setState({ loading: false });
             });
 
     }
@@ -105,56 +104,56 @@ class MyCollections extends Component {
                             <Icon
                                 name={"ios-menu"}
                                 style={{
-                                color: "#fff"
-                            }}/>
+                                    color: "#fff"
+                                }} />
                         </Button>
                     </Left>
                     <Body>
                         <Text
                             style={{
-                            color: "#fff"
-                        }}>
+                                color: "#fff"
+                            }}>
                             Moja kolekcja
                         </Text>
                     </Body>
                 </Header>
                 <Drawer
                     ref={ref => {
-                    this.drawer = ref;
-                }}
+                        this.drawer = ref;
+                    }}
                     content={< SideBar />}
                     onClose={() => this.closeDrawer()}>
                     <Content
                         style={{
-                        backgroundColor: "#fff"
-                    }}>
+                            backgroundColor: "#fff"
+                        }}>
                         <View
                             style={{
-                            flexDirection: 'row',
-                            margin: 20
-                        }}>
+                                flexDirection: 'row',
+                                margin: 20
+                            }}>
                             <View
                                 style={{
-                                width: "50%"
-                            }}>
+                                    width: "50%"
+                                }}>
                                 <Image
                                     source={(this.props.user.link == null)
-                                    ? require('../img/user.jpg')
-                                    : {
-                                        uri: this.props.user.link
-                                    }}
+                                        ? require('../img/user.jpg')
+                                        : {
+                                            uri: this.props.user.link
+                                        }}
                                     style={{
-                                    width: 150,
-                                    height: 150,
-                                    borderRadius: 360
-                                }}/>
+                                        width: 150,
+                                        height: 150,
+                                        borderRadius: 360
+                                    }} />
                             </View>
                             <View
                                 style={{
-                                width: "50%",
-                                alignItems: "center",
-                                justifyContent: "space-between"
-                            }}>
+                                    width: "50%",
+                                    alignItems: "center",
+                                    justifyContent: "space-around"
+                                }}>
                                 <Text>
                                     {this.props.user.firstname + " " + this.props.user.lastname}
                                 </Text>
@@ -164,37 +163,20 @@ class MyCollections extends Component {
                                 <Text>
                                     {this.props.user.email}
                                 </Text>
-                                <Button
-                                    iconLeft
-                                    onPress={() => this.setState({
-                                    follow: !this.state.follow
-                                })}
-                                    style={{
-                                    alignSelf: "center"
-                                }}>
-                                    <Icon
-                                        name={this.state.follow
-                                        ? 'md-person'
-                                        : 'md-person-add'}/>
-                                    <Text>
-                                        {this.state.follow
-                                            ? "Unfollow"
-                                            : "Follow"}
-                                    </Text>
-                                </Button>
+                                {this.renderButton()}
                             </View>
                         </View>
                         <View
                             style={{
-                            alignItems: "center",
-                            justifyContent: "center"
-                        }}>
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }}>
                             <LoadingList
                                 loading={this.state.loading}
                                 condition={this.state.photos.length == 0}
                                 text={"Brak Postów"}
                                 loadingText={"Loading"}>
-                                <PhotoGrid PhotosList={this.state.photos} borderRadius={10}/>
+                                <PhotoGrid PhotosList={this.state.photos} borderRadius={10} />
                             </LoadingList>
                         </View>
                     </Content>
@@ -215,17 +197,52 @@ class MyCollections extends Component {
             .open();
     };
     onVisibleImage = img => {
-        this.setState({image: img});
-        this.setState({visible: true});
+        this.setState({ image: img });
+        this.setState({ visible: true });
     };
     onDismissModal = () => {
-        this.setState({visible: false});
+        this.setState({ visible: false });
     };
     renderUser = (link) => {
         if (link == null) {
             return require('../img/user.jpg');
         }
-        return {uri: link};
+        return { uri: link };
+    }
+    renderButton = () => {
+        if (this.props.user.id === this.state.myId) {
+            return (<Button
+                iconLeft
+                onPress={() => Actions.EditScene({ user: this.props.user })}
+                style={{
+                    alignSelf: "center"
+                }}>
+                <Icon
+                    name={'md-create'} />
+                <Text>
+                    {"Edycja danych"}
+                </Text>
+            </Button>)
+        } else {
+            return(<Button
+                iconLeft
+                onPress={() => this.setState({
+                    follow: !this.state.follow
+                })}
+                style={{
+                    alignSelf: "center"
+                }}>
+                <Icon
+                    name={this.state.follow
+                        ? 'md-person'
+                        : 'md-person-add'} />
+                <Text>
+                    {this.state.follow
+                        ? "Unfollow"
+                        : "Follow"}
+                </Text>
+            </Button>)
+        }
     }
 }
 

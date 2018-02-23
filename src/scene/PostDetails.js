@@ -128,11 +128,14 @@ class HomeScene extends Component {
                                     </Button>
                                 </Body>
                             </CardItem>
-                            <CardItem>
-                                <Left>
-                                    <Text>{this.props.post.description}</Text>
-                                </Left>
-                            </CardItem>
+                            {this.props.post.description.length > 0 ?
+                                <CardItem >
+                                    <Left>
+                                        <Text style={{ paddingBottom: 20 }}>{this.props.post.description}</Text>
+                                    </Left>
+                                </CardItem> :
+                                null
+                            }
                             <CardItem>
                                 <View
                                     style={{

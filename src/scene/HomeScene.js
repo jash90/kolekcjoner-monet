@@ -251,11 +251,7 @@ class HomeScene extends Component {
                       </Button>
                     </Body>
                   </CardItem>
-                  <CardItem>
-                    <Left>
-                      <Text>{item.description}</Text>
-                    </Left>
-                  </CardItem>
+                {this.renderDescription(item.description.length)}
                 </Card>
               )}/>
           </Content>
@@ -298,6 +294,15 @@ class HomeScene extends Component {
           .update({likes});
 
       });
+  }
+  renderDescription(length) {
+    if (length > 0) {
+      return (<CardItem>
+        <Left>
+          <Text style={{ paddingBottom: 20 }}>{item.description}</Text>
+        </Left>
+      </CardItem>)
+    }
   }
 }
 
