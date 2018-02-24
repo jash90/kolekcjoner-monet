@@ -54,6 +54,10 @@ class MyCollections extends Component {
         } catch (error) {
             console.log(error);
         }
+        if (this.props.followers != null) {
+            var followers = this.props.followers;
+            this.setState({ follow: followers.includes(this.props.user) });
+        }
         var ref = firebase
             .firestore()
             .doc("users/" + this.props.user.id);
@@ -224,11 +228,11 @@ class MyCollections extends Component {
                 </Text>
             </Button>)
         } else {
-            return(<Button
+            return (<Button
                 iconLeft
-                onPress={() => this.setState({
-                    follow: !this.state.follow
-                })}
+                onPress={() => {
+                    this.unfollow();
+                }}
                 style={{
                     alignSelf: "center"
                 }}>
@@ -243,6 +247,28 @@ class MyCollections extends Component {
                 </Text>
             </Button>)
         }
+    }
+    unfollow() {
+        const uid = firebase
+            .auth()
+            .currentUser.uid;
+        firebase
+            .firestore()
+            .doc("followers/" + uid)
+            .get()
+            .then((doc) => {
+                var favorites = doc.data();
+                console.log(favorites);
+                var fav = [];
+                favorites.forEach((user) => {
+                    if (user.id != this.props.user.id)
+                        fav.push(user);
+                })
+                console.log(fav);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 }
 

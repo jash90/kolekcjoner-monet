@@ -52,7 +52,7 @@ class SideBar extends Component {
 
               })
               .finally(() => {
-                this.setState({user});
+                setTimeout(()=>{this.setState({user})},1000);
                 console.log(user);
               });
 

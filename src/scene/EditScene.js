@@ -25,7 +25,6 @@ import ImagePlaceholder from "../components/ImagePlaceholder";
 import firebase from 'react-native-firebase';
 import ModalLoading from '../components/ModalLoading';
 import { Actions } from "react-native-router-flux";
-
 import Separator from '@components/separator'
 
 class EditScene extends Component {
@@ -39,12 +38,15 @@ class EditScene extends Component {
             password: '',
             repeatpassword: '',
             error: '',
-            loading: false
+            loading: false,
+            visible:false,
+            text:""
         }
     }
     componentDidMount = () => {
         const user = this.props.user;
         this.setState({ firstname: user.firstname, lastname: user.lastname, email: user.email, city: user.city, uri: user.link });
+        this.setState({user:this.props.user});
     }
 
     render() {
@@ -97,7 +99,7 @@ class EditScene extends Component {
                                     textPlaceholder="Wybierz zdjęcie"
                                 />
                             </View>
-                            <Separator title="Zmiana danych"/>
+                            <Separator title="Zmiana danych" />
                             <Form>
                                 <Item floatingLabel>
                                     <Label>Imię</Label>
@@ -110,13 +112,7 @@ class EditScene extends Component {
                                     <Input
                                         value={this.state.lastname}
                                         onChangeText={(text) => this.setState({ lastname: text })} />
-                                </Item>
-                                <Item floatingLabel>
-                                    <Label>Email</Label>
-                                    <Input
-                                        value={this.state.email}
-                                        onChangeText={(text) => this.setState({ email: text })} />
-                                </Item>
+                                </Item>                          
                                 <Item floatingLabel>
                                     <Label>Miasto</Label>
                                     <Input
@@ -130,12 +126,12 @@ class EditScene extends Component {
                                     marginTop: 20,
                                     marginBottom: 20
                                 }}
-                                onPress={() => this.onRegister()}>
+                                onPress={() => this.saveUser()}>
                                 <Text>
                                     Zapisz dane
                         </Text>
                             </Button>
-                            <Separator title="Zmień hasło"/>
+                            <Separator title="Zmień hasło" />
                             <Form>
                                 <Item floatingLabel last>
                                     <Label>Hasło</Label>
@@ -157,11 +153,12 @@ class EditScene extends Component {
                                 style={{
                                     marginTop: 20
                                 }}
-                                onPress={() => this.onRegister()}>
+                                onPress={() => this.savePassoword()}>
                                 <Text>
                                     Zmień hasło
                         </Text>
                             </Button>
+                            <ModalLoading visible={this.state.visible} text={this.state.text}/>
                         </View>
                     </Content>
                 </Drawer>
@@ -181,6 +178,52 @@ class EditScene extends Component {
             ._root
             .open();
     };
+    saveUser(){
+        this.setState({text:"Zapisywanie danych", visible:true});
+        var user = { firstname: this.state.firstname, lastname: this.state.lastname, email: this.state.email, city: this.state.city};
+        
+        firebase
+            .firestore()
+            .collection("users")
+            .doc(this.state.user.id)
+            .get()
+            .then((doc) => {
+                doc
+                    .ref
+                    .update( user );
+            }).catch((error) => {
+                console.log(error);
+            }).
+            finally(() => {
+                this.setState({ text: "", visible: false });
+            });
+    }
+    savePassoword(){
+        this.setState({ text: "Zapisywanie hasła", visible: true });
+        var user = firebase.auth().currentUser;
+        if (this.state.password.length>5) {
+            alert("Hasło musi zawierac conajmniej 6 znaków.");
+            return;
+        } 
+        if (this.state.password!=this.state.repeatpassword){
+            alert("Podane hasła nie są takie same.");
+            return;
+        }
+        var newPassword = this.state.password;
+
+        user.updatePassword(newPassword)
+        .then((promise)=> {
+           console.log(promise);
+           
+        })
+        .catch((error) => {
+            console.log(error);
+        }).
+        finally(()=>{
+            this.setState({ text: "", visible: false });
+        });
+
+    }
 }
 
 export default EditScene;

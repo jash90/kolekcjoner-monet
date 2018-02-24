@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Image} from "react-native";
+import React, { Component } from "react";
+import { Image } from "react-native";
 import {
     Body,
     Button,
@@ -56,7 +56,7 @@ class FavoritesScene extends Component {
     }
     onCollectionUpdate = querySnapshot => {
         const posts = [];
-        this.setState({loading: true});
+        this.setState({ loading: true });
         firebase
             .firestore()
             .doc("favorites/" + this.props.user.id)
@@ -93,13 +93,13 @@ class FavoritesScene extends Component {
                                                         posts.sort((a, b) => {
                                                             return a.dateupdate - b.dateupdate;
                                                         });
-                                                        this.setState({posts});
+                                                        this.setState({ posts });
                                                     });
                                             });
                                     });
                             });
                     });
-                this.setState({loading: false});
+                this.setState({ loading: false });
 
             });
 
@@ -112,8 +112,8 @@ class FavoritesScene extends Component {
                         <Icon
                             name={"ios-menu"}
                             style={{
-                            color: "#fff"
-                        }}/>
+                                color: "#fff"
+                            }} />
                     </Button>
                 </Left>
                 <Body>
@@ -124,14 +124,14 @@ class FavoritesScene extends Component {
             </Header>
             <Drawer
                 ref={ref => {
-                this.drawer = ref;
-            }}
+                    this.drawer = ref;
+                }}
                 content={< SideBar />}
                 onClose={() => this.closeDrawer()}>
                 <Content
                     style={{
-                    backgroundColor: "#fff"
-                }}>
+                        backgroundColor: "#fff"
+                    }}>
                     <LoadingList
                         loading={this.state.loading}
                         condition={this.state.posts.length == 0}
@@ -140,62 +140,62 @@ class FavoritesScene extends Component {
                         <List
                             dataArray={this.state.posts}
                             style={{
-                            width: "100%"
-                        }}
+                                width: "100%"
+                            }}
                             renderRow={item => <Card style={{
-                            flex: 0
-                        }}>
-                            <CardItem>
-                                <Left>
-                                    <Thumbnail
-                                        source={(item.user.link == null)
-                                        ? require('../img/user.jpg')
-                                        : {
-                                            uri: item.user.link
-                                        }}/>
+                                flex: 0
+                            }}>
+                                <CardItem>
+                                    <Left>
+                                        <Thumbnail
+                                            source={(item.user.link == null)
+                                                ? require('../img/user.jpg')
+                                                : {
+                                                    uri: item.user.link
+                                                }} />
+                                        <Body>
+                                            <Text>
+                                                {item.user.firstname + " " + item.user.lastname}
+                                            </Text>
+                                            <Text note>
+                                                {Moment(item.dateupdate).format("DD.MM.YYYY")}
+                                            </Text>
+                                        </Body>
+                                    </Left>
+                                    <Right>
+                                        <Text>{timeAgo.format(item.dateupdate)}</Text>
+                                    </Right>
+                                </CardItem>
+                                <CardItem cardBody>
                                     <Body>
-                                        <Text>
-                                            {item.user.firstname + " " + item.user.lastname}
-                                        </Text>
-                                        <Text note>
-                                            {Moment(item.dateupdate).format("DD.MM.YYYY")}
-                                        </Text>
+                                        <Image
+                                            source={{
+                                                uri: item.link
+                                            }}
+                                            style={{
+                                                width: "95%",
+                                                height: 200,
+                                                alignSelf: "center",
+                                                flex: 1
+                                            }} />
                                     </Body>
-                                </Left>
-                                <Right>
-                                    <Text>{timeAgo.format(item.dateupdate)}</Text>
-                                </Right>
-                            </CardItem>
-                            <CardItem cardBody>
-                                <Body>
-                                    <Image
-                                        source={{
-                                        uri: item.link
-                                    }}
-                                        style={{
-                                        width: "95%",
-                                        height: 200,
-                                        alignSelf: "center",
-                                        flex: 1
-                                    }}/>
-                                </Body>
-                            </CardItem>
-                            <CardItem>
-                                <Left>
-                                    <Button transparent>
-                                        <Icon active name="thumbs-up"/>
-                                        <Text>{item.likes.length + " Likes"}</Text>
-                                    </Button>
-                                </Left>
-                                <Body>
-                                    <Button transparent>
-                                        <Icon active name="chatbubbles"/>
-                                        <Text>{item.comments.length + " Comments"}</Text>
-                                    </Button>
-                                </Body>
-                            </CardItem>
-                            {this.renderDescription(item.description.length)}
-                        </Card>}/>
+                                </CardItem>
+                                <CardItem>
+                                    <Left>
+                                        <Button transparent>
+                                            <Icon active name="thumbs-up" />
+                                            <Text>{item.likes.length + " Likes"}</Text>
+                                        </Button>
+                                    </Left>
+                                    <Body>
+                                        <Button transparent>
+                                            <Icon active name="chatbubbles" />
+                                            <Text>{item.comments.length + " Comments"}</Text>
+                                        </Button>
+                                    </Body>
+                                </CardItem>
+                                {this.renderDescription(item.description.length)}
+                            </Card>} />
                     </LoadingList>
                 </Content>
             </Drawer>
@@ -213,14 +213,38 @@ class FavoritesScene extends Component {
             ._root
             .open();
     };
-    renderDescription(length){
-        if (length>0){
+    renderDescription(length) {
+        if (length > 0) {
             return (<CardItem>
                 <Left>
                     <Text style={{ paddingBottom: 20 }}>{item.description}</Text>
                 </Left>
             </CardItem>)
         }
+    }
+    toggleLike = (item, iduser) => {
+        //
+        if (item.likes.includes(iduser)) {
+            item
+                .likes
+                .splice(item.likes.indexOf(iduser), 1);
+        } else {
+            item
+                .likes
+                .push(iduser);
+        }
+        var likes = item.likes;
+        firebase
+            .firestore()
+            .collection("posts")
+            .doc(item.id)
+            .get()
+            .then((doc) => {
+                doc
+                    .ref
+                    .update({ likes });
+
+            });
     }
 }
 

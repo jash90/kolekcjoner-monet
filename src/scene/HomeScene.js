@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Image, TouchableOpacity, View} from "react-native";
+import React, { Component } from "react";
+import { Image, TouchableOpacity, View } from "react-native";
 import {
   Body,
   Button,
@@ -21,7 +21,7 @@ import {
   Thumbnail
 } from "native-base";
 import SideBar from "../components/SideBar";
-import {Actions} from "react-native-router-flux";
+import { Actions } from "react-native-router-flux";
 import firebase from "react-native-firebase";
 import Moment from "moment";
 import TimeAgo from "javascript-time-ago";
@@ -43,7 +43,7 @@ class HomeScene extends Component {
     this.state = {
       loading: true,
       posts: [],
-      posts2:[],
+      posts2: [],
       image: "",
       name: ""
     };
@@ -61,72 +61,73 @@ class HomeScene extends Component {
 
   onCollectionUpdate = querySnapshot => {
     console.log(querySnapshot);
-    const posts = this.state.posts;
-    const tab = [];
-    this.setState({loading: true});
+    const added = [];
+    const change = [];
+    const remove =[];
+    this.setState({ loading: true });
     querySnapshot.docChanges.forEach(doc => {
       // tab.push(doc);
-       // console.log(doc.type)
-       if (doc.type == "added") {
-               var post = doc.doc.data();
+      // console.log(doc.type)
+      if (doc.type == "added") {
+        var post = doc.doc.data();
         post.id = doc.doc.id;
-        post
-          .idusers
-          .get()
-          .then(user => {
-            post.user = user.data();
-            post.user.id = user.id;
-            firebase
-              .storage()
-              .ref(post.user.id + ".jpg")
-              .getDownloadURL()
-              .then(url => {
-                post.user.link = url;
-                firebase
-                  .storage()
-                  .ref(post.id + ".jpg")
-                  .getDownloadURL()
-                  .then(url => {
-                    post.link = url;
-                    posts.push(post);
-                    posts.sort(function(a,b){
-                      return Moment(b.dateupdate).unix() - Moment(a.dateupdate).unix();
-                    });
-                    this.setState({ posts });
-                  })
-                  .catch(error => {
-                    console.log(error);
-                    console.log(user);
-                  });
-              })
-              .catch(error => {
-                console.log(error);
-                  console.log(user);
-              });
-             })
-             .catch((error)=>{
-               console.log(error);
-                 console.log(post);
-             });
- 
-       }
-       if (doc.type == "modified") {
-         // console.log("MOD");
-         // console.log(doc.doc.data());
-       }
-       if (doc.type == "removed") {
-         console.log("REM");
-         // this.state.posts.forEach((value)=>{
-         //   console.log(value);
-         //   if (value.id==doc.doc.id){
-         //     console.log("REM",value);
-         //     var p = this.state.posts.splice(this.state.posts.indexOf(value),1);
-         //     this.setState({posts:p});
-         //     console.log(this.state.posts);
-         //   }
-         // });
-       }
-     });
+        added.push(post);
+
+      }
+      if (doc.type == "modified") {
+        var post = doc.doc.data();
+        post.id = doc.doc.id;
+        change.push(post);
+      }
+      if (doc.type == "removed") {
+        var post = doc.doc.data();
+        post.id = doc.doc.id;
+        remove.push(post);
+      }
+    });
+    added.forEach((post)=>{
+      post
+        .idusers
+        .get()
+        .then(user => {
+          post.user = user.data();
+          post.user.id = user.id;
+          firebase
+            .storage()
+            .ref(user.id + ".jpg")
+            .getDownloadURL()
+            .then(url => {
+              post.user.link = url;
+            });
+        });
+      firebase
+        .storage()
+        .ref(post.id + ".jpg")
+        .getDownloadURL()
+        .then(url => {
+          post.link = url;
+
+        });
+    });
+    if (added.length>0)
+  setTimeout(()=>{this.setState({posts:this.state.posts.concat(added)})},2000);
+    if (change.length > 0)
+  setTimeout(() => { 
+    var newposts = this.state.posts;
+    for(var i =0; i<newposts.length;i++){
+      for (var j = 0; j < change.length; j++) {
+        if (newposts[i].id===change[j].id){
+          change[i].user = newposts[i].user;
+          change[i].link = newposts[i].link;
+          newposts[i]=change[j];
+          this.setState({posts:newposts});
+        }
+      }
+    }
+    console.log(this.state.posts);
+  }, 2000);
+
+  console.log(this.state.posts);
     // for (var i=0;i<querySnapshot.docChanges.length;i++){   var doc  =
     // querySnapshot.docChanges[0]; } var post = doc.data(); post.id = doc.id; post
     //  .idusers   .get()   .then(user => {     post.user = user.data();
@@ -148,8 +149,8 @@ class HomeScene extends Component {
               <Icon
                 name={"ios-menu"}
                 style={{
-                color: "#fff"
-              }}/>
+                  color: "#fff"
+                }} />
             </Button>
           </Left>
           <Body>
@@ -160,36 +161,36 @@ class HomeScene extends Component {
         </Header>
         <Drawer
           ref={ref => {
-          this.drawer = ref;
-        }}
+            this.drawer = ref;
+          }}
           content={< SideBar />}
           onClose={() => this.closeDrawer()}>
           <Content style={{
             backgroundColor: "#fff"
           }}>
-              <List
-                dataArray={this.state.posts}
-                style={{
+            <List
+              dataArray={this.state.posts}
+              style={{
                 width: "100%"
               }}
-                renderRow={item => (
+              renderRow={item => (
                 <Card style={{
                   flex: 1
                 }}>
                   <CardItem>
-                    <TouchableOpacity onPress={() => Actions.MyCollections({user: item.user})}>
+                    <TouchableOpacity onPress={() => Actions.MyCollections({ user: item.user })}>
                       <View
                         style={{
-                        flex: 1,
-                        marginRight: 10
-                      }}>
+                          flex: 1,
+                          marginRight: 10
+                        }}>
                         <Thumbnail
                           small
                           source={item.user.link == null
-                          ? require("../img/user.jpg")
-                          : {
-                            uri: item.user.link
-                          }}/>
+                            ? require("../img/user.jpg")
+                            : {
+                              uri: item.user.link
+                            }} />
                       </View>
                     </TouchableOpacity>
                     <Body>
@@ -199,8 +200,8 @@ class HomeScene extends Component {
                       <Text
                         note
                         style={{
-                        fontSize: 12
-                      }}>
+                          fontSize: 12
+                        }}>
                         {Moment(item.dateupdate).format("DD.MM.YYYY")}
                       </Text>
                     </Body>
@@ -211,9 +212,9 @@ class HomeScene extends Component {
                   <CardItem cardBody>
                     <TouchableOpacity
                       style={{
-                      flex: 1
-                    }}
-                      onPress={() => Actions.PostDetails({post: item, user: this.props.user})}>
+                        flex: 1
+                      }}
+                      onPress={() => Actions.PostDetails({ post: item, user: this.props.user })}>
                       <View style={{
                         flex: 1
                       }}>
@@ -221,14 +222,14 @@ class HomeScene extends Component {
                           resizeMethod={"scale"}
                           resizeMode={"contain"}
                           source={{
-                          uri: item.link
-                        }}
+                            uri: item.link
+                          }}
                           style={{
-                          width: "95%",
-                          height: 200,
-                          alignSelf: "center",
-                          flex: 1
-                        }}/>
+                            width: "95%",
+                            height: 200,
+                            alignSelf: "center",
+                            flex: 1
+                          }} />
                       </View>
                     </TouchableOpacity>
                   </CardItem>
@@ -237,23 +238,23 @@ class HomeScene extends Component {
                       <Button transparent onPress={() => this.toggleLike(item, this.props.user.id)}>
                         <Icon
                           name={item
-                          .likes
-                          .includes(this.props.user.id)
-                          ? "ios-thumbs-up"
-                          : "ios-thumbs-up-outline"}/>
+                            .likes
+                            .includes(this.props.user.id)
+                            ? "ios-thumbs-up"
+                            : "ios-thumbs-up-outline"} />
                         <Text>{item.likes.length + " Likes"}</Text>
                       </Button>
                     </Left>
                     <Body>
                       <Button transparent>
-                        <Icon active name="chatbubbles"/>
+                        <Icon active name="chatbubbles" />
                         <Text>{item.comments.length + " Comments"}</Text>
                       </Button>
                     </Body>
                   </CardItem>
-                {this.renderDescription(item.description.length)}
+                  {this.renderDescription(item.description)}
                 </Card>
-              )}/>
+              )} />
           </Content>
         </Drawer>
       </Container>
@@ -291,15 +292,15 @@ class HomeScene extends Component {
       .then((doc) => {
         doc
           .ref
-          .update({likes});
+          .update({ likes });
 
       });
   }
-  renderDescription(length) {
-    if (length > 0) {
+  renderDescription(description) {
+    if (description.length > 0) {
       return (<CardItem>
         <Left>
-          <Text style={{ paddingBottom: 20 }}>{item.description}</Text>
+          <Text style={{ paddingBottom: 20 }}>{description}</Text>
         </Left>
       </CardItem>)
     }

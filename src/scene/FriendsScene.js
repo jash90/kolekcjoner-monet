@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {View} from "react-native";
+import React, { Component } from "react";
+import { View, TouchableOpacity } from "react-native";
 import {
     Body,
     Button,
@@ -22,7 +22,7 @@ import {
 import SideBar from "../components/SideBar";
 import firebase from "react-native-firebase";
 import LoadingList from '../components/LoadingList';
-
+import { Actions } from "react-native-router-flux";
 class FriendsScene extends Component {
     constructor(props) {
         super(props);
@@ -50,18 +50,19 @@ class FriendsScene extends Component {
     onCollectionUpdate = (querySnapshot) => {
         console.log(this.props.user);
         const followers = [];
-        this.setState({loading: true});
+        this.setState({ loading: true });
         firebase
             .firestore()
             .doc("followers/" + this.props.user.id)
             .get()
             .then(doc => {
-                const {users} = doc.data();
+                const { users } = doc.data();
                 users.forEach(user => {
                     user
                         .get()
                         .then(e => {
                             var user = e.data();
+                            user.id = e.id;
                             firebase
                                 .storage()
                                 .ref(e.id + ".jpg")
@@ -71,10 +72,11 @@ class FriendsScene extends Component {
                                     user.link = url;
 
                                 })
-                                . finally(() => {
+                                .finally(() => {
                                     followers.push(user);
-                                    this.setState({followers});
-                                    this.setState({loading: false});
+                                    this.setState({ followers });
+                                    this.setState({ loading: false });
+                                    console.log(followers)
                                 });
 
                         });
@@ -92,29 +94,29 @@ class FriendsScene extends Component {
                             <Icon
                                 name={"ios-menu"}
                                 style={{
-                                color: "#fff"
-                            }}/>
+                                    color: "#fff"
+                                }} />
                         </Button>
                     </Left>
                     <Body>
                         <Text
                             style={{
-                            color: "#fff"
-                        }}>
+                                color: "#fff"
+                            }}>
                             Obserwujący
                         </Text>
                     </Body>
                 </Header>
                 <Drawer
                     ref={ref => {
-                    this.drawer = ref;
-                }}
+                        this.drawer = ref;
+                    }}
                     content={< SideBar />}
                     onClose={() => this.closeDrawer()}>
                     <Content
                         style={{
-                        backgroundColor: "#fff"
-                    }}>
+                            backgroundColor: "#fff"
+                        }}>
                         <LoadingList
                             loading={this.state.loading}
                             condition={this.state.followers.length == 0}
@@ -123,41 +125,43 @@ class FriendsScene extends Component {
                             <List
                                 dataArray={this.state.followers}
                                 style={{
-                                width: "100%"
-                            }}
+                                    width: "100%"
+                                }}
                                 renderRow={(item) => (
-                                <View
-                                    style={{
-                                    justifyContent: "flex-start",
-                                    flexDirection: "row"
-                                }}>
                                     <View
                                         style={{
-                                        justifyContent: "center"
-                                    }}>
-                                        <Thumbnail
-                                            small
-                                            source={(item.link == null)
-                                            ? require('../img/user.jpg')
-                                            : {
-                                                uri: item.link
-                                            }}
+                                            justifyContent: "flex-start",
+                                            flexDirection: "row"
+                                        }}>
+                                        <View
                                             style={{
-                                            margin: 10
-                                        }}/>
+                                                justifyContent: "center"
+                                            }}>
+                                            <TouchableOpacity onPress={()=>Actions.MyCollections({user:item, followers :this.state.followers})}>
+                                            <Thumbnail
+                                                small
+                                                source={(item.link == null)
+                                                    ? require('../img/user.jpg')
+                                                    : {
+                                                        uri: item.link
+                                                    }}
+                                                style={{
+                                                    margin: 10
+                                                }} />
+                                                </TouchableOpacity>
+                                        </View>
+                                        <View
+                                            style={{
+                                                alignItems: "flex-start",
+                                                justifyContent: "center"
+                                            }}>
+                                            <Text>{item.firstname + " " + item.lastname}</Text>
+                                            <Text note>
+                                                {"Miasto: " + item.city + " Email: " + item.email}
+                                            </Text>
+                                        </View>
                                     </View>
-                                    <View
-                                        style={{
-                                        alignItems: "flex-start",
-                                        justifyContent: "center"
-                                    }}>
-                                        <Text>{item.firstname + " " + item.lastname}</Text>
-                                        <Text note>
-                                            {"Miasto: " + item.city + " Email: " + item.email}
-                                        </Text>
-                                    </View>
-                                </View>
-                            )}/>
+                                )} />
                         </LoadingList>
                     </Content>
                 </Drawer>
