@@ -28,7 +28,8 @@ class FriendsScene extends Component {
         super(props);
         this.state = {
             followers: [],
-            loading: true
+            loading: true,
+            userId :""
         };
         this.ref = firebase
             .firestore()
@@ -38,10 +39,13 @@ class FriendsScene extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.props.userId);
         this.unsubscribe = this
             .ref
             .onSnapshot(this.onCollectionUpdate);
+            var user = firebase
+            .auth()
+            .currentUser;
+      this.setState({userId:user.uid});
     }
 
     componentWillUnmount() {
@@ -53,7 +57,7 @@ class FriendsScene extends Component {
         this.setState({ loading: true });
         firebase
             .firestore()
-            .doc("followers/" + this.props.user.id)
+            .doc("followers/" + this.state.userId)
             .get()
             .then(doc => {
                 const { users } = doc.data();
@@ -117,11 +121,6 @@ class FriendsScene extends Component {
                         style={{
                             backgroundColor: "#fff"
                         }}>
-                        <LoadingList
-                            loading={this.state.loading}
-                            condition={this.state.followers.length == 0}
-                            text={"Brak Postów"}
-                            loadingText={"Loading"}>
                             <List
                                 dataArray={this.state.followers}
                                 style={{
@@ -162,7 +161,6 @@ class FriendsScene extends Component {
                                         </View>
                                     </View>
                                 )} />
-                        </LoadingList>
                     </Content>
                 </Drawer>
             </Container>

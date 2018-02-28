@@ -169,10 +169,11 @@ class SendScene extends Component {
     };
     sendImage = () => {
         this.setState({visible: true});
-        console.log("USER : " + this.props.user.id);
+        var user = firebase.auth().currentUser;
+        console.log("USER : " + user.uid);
         var user = firebase
             .firestore()
-            .doc("users/" + this.props.user.id);
+            .doc("users/" + user.uid);
         console.log("ref :" + user);
         this
             .ref

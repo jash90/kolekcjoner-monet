@@ -31,6 +31,7 @@ import LoadingList from '../components/LoadingList';
 class MyCollections extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             visible: false,
             image: null,
@@ -38,30 +39,48 @@ class MyCollections extends Component {
             posts: [],
             follow: false,
             loading: true,
-            myId: null
+            myId: null,
+            followers: []
         };
     }
 
-    async componentWillMount() {
-        try {
-            const value = await AsyncStorage.getItem('@UserId:key');
-            if (value !== null) {
-                this.setState({ myId: value });
-                console.log(this.state.myId);
-                console.log(this.props.user.id);
-                console.log(this.state.myId == this.props.user.id);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-        if (this.props.followers != null) {
-            var followers = this.props.followers;
-            this.setState({ follow: followers.includes(this.props.user) });
-        }
+    componentWillMount() {
+        var user = firebase.auth().currentUser;
+        this.setState({myId:user.uid});
+        var userRef =
+            firebase
+                .firestore()
+                .collection("users")
+                .doc(this.props.user.id);
+        //console.log(userRef);
+
+        firebase
+            .firestore()
+            .collection("followers")
+            .doc(user.uid)
+            .get()
+            .then((doc) => {
+                this.setState({ followers: doc.data().users});
+                doc.data().users.forEach(u => {
+                    if (u.id == userRef.id) {
+                        this.setState({follow:true})
+                    }
+                })
+            })
+            .catch((erorr)=>{
+                console.log(error);
+                this.setState({ loading: false });
+            })
+            .finally(() => {
+                this.setState({ loading: false });
+            });
+            
+
+
         var ref = firebase
             .firestore()
             .doc("users/" + this.props.user.id);
-        console.log(ref);
+        //console.log(ref);
         const postss = [];
         var photos = [];
         this.setState({ loading: true });
@@ -84,11 +103,11 @@ class MyCollections extends Component {
                             photos.push(url);
                             this.setState({ postss });
                             this.setState({ photos });
-                            console.log(posts);
+                            // console.log(posts);
                         })
                         .catch((error) => {
                             console.log(error);
-                            // this.setState({loading:false});
+                            this.setState({ loading: false });
                         })
 
                 });
@@ -175,13 +194,7 @@ class MyCollections extends Component {
                                 alignItems: "center",
                                 justifyContent: "center"
                             }}>
-                            <LoadingList
-                                loading={this.state.loading}
-                                condition={this.state.photos.length == 0}
-                                text={"Brak Postów"}
-                                loadingText={"Loading"}>
                                 <PhotoGrid PhotosList={this.state.photos} borderRadius={10} />
-                            </LoadingList>
                         </View>
                     </Content>
                 </Drawer>
@@ -231,7 +244,7 @@ class MyCollections extends Component {
             return (<Button
                 iconLeft
                 onPress={() => {
-                    this.unfollow();
+                    this.follow();
                 }}
                 style={{
                     alignSelf: "center"
@@ -248,27 +261,36 @@ class MyCollections extends Component {
             </Button>)
         }
     }
-    unfollow() {
-        const uid = firebase
-            .auth()
-            .currentUser.uid;
-        firebase
-            .firestore()
-            .doc("followers/" + uid)
-            .get()
-            .then((doc) => {
-                var favorites = doc.data();
-                console.log(favorites);
-                var fav = [];
-                favorites.forEach((user) => {
-                    if (user.id != this.props.user.id)
-                        fav.push(user);
-                })
-                console.log(fav);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+    follow = () => {
+      if (this.state.follow){
+          var userRef =
+              firebase
+                  .firestore()
+                  .collection("users")
+                  .doc(this.props.user.id);
+          this.state.followers.splice(this.state.followers.indexOf(userRef),1);
+          console.log(this.state.followers);
+          firebase
+              .firestore()
+              .collection("followers")
+              .doc(this.state.myId)
+              .update({ users: this.state.followers });
+          this.setState({ follow: !this.state.follow });
+      }else{
+          var userRef =
+              firebase
+                  .firestore()
+                  .collection("users")
+                  .doc(this.props.user.id);
+          this.state.followers.push(userRef);
+          console.log(this.state.followers);
+          firebase
+          .firestore()
+          .collection("followers")
+          .doc(this.state.myId)
+          .update({users:this.state.followers});
+          this.setState({follow: !this.state.follow});
+      }
     }
 }
 

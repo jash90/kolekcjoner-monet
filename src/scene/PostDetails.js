@@ -32,8 +32,13 @@ class HomeScene extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            comment: ""
+            comment: "",
+            userId:""
         }
+    }
+    componentWillMount() {
+        var user = firebase.auth().currentUser;
+        this.setState({userId:user.uid});
     }
     render() {
         return (
@@ -110,13 +115,13 @@ class HomeScene extends Component {
                             <CardItem>
                                 <Left>
                                     <Button
-                                        transparent onPress={() => this.toggleLike(item, this.props.user.id)}>
+                                        transparent onPress={() => this.toggleLike(this.props.post, this.state.userId)}>
                                         <Icon
                                             name={this
                                                 .props
                                                 .post
                                                 .likes
-                                                .includes(this.props.user.id)
+                                                .includes(this.state.userId)
                                                 ? "ios-thumbs-up"
                                                 : "ios-thumbs-up-outline"} />
                                         <Text>{this.props.post.likes.length + " Likes"}</Text>
@@ -165,7 +170,7 @@ class HomeScene extends Component {
                                         value={this.state.comment}
                                         onChangeText={(text) => this.setState({ comment: text })}
                                     />
-                                    <Button onPress={() => this.sendComment(this.props.post, this.props.user.id)}>
+                                    <Button onPress={() => this.sendComment(this.props.post, this.state.userId)}>
                                         <Icon name="send" />
                                     </Button>
                                 </View>
@@ -230,6 +235,9 @@ class HomeScene extends Component {
                     .update({ likes });
 
             });
+
+
+
     }
     sendComment = (item, iduser) => {
         var comment = {};

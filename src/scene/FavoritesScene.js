@@ -57,9 +57,10 @@ class FavoritesScene extends Component {
     onCollectionUpdate = querySnapshot => {
         const posts = [];
         this.setState({ loading: true });
+        var user = firebase.auth().currentUser;
         firebase
             .firestore()
-            .doc("favorites/" + this.props.user.id)
+            .doc("favorites/" + user.uid)
             .get()
             .then((fav) => {
                 fav
@@ -142,7 +143,7 @@ class FavoritesScene extends Component {
                             style={{
                                 width: "100%"
                             }}
-                            renderRow={item => <Card style={{
+                            renderRow={item=> <Card style={{
                                 flex: 0
                             }}>
                                 <CardItem>
@@ -194,7 +195,7 @@ class FavoritesScene extends Component {
                                         </Button>
                                     </Body>
                                 </CardItem>
-                                {this.renderDescription(item.description.length)}
+                                {this.renderDescription(item.description)}
                             </Card>} />
                     </LoadingList>
                 </Content>
@@ -213,11 +214,11 @@ class FavoritesScene extends Component {
             ._root
             .open();
     };
-    renderDescription(length) {
-        if (length > 0) {
+    renderDescription(description) {
+        if (description.length > 0) {
             return (<CardItem>
                 <Left>
-                    <Text style={{ paddingBottom: 20 }}>{item.description}</Text>
+                    <Text style={{ paddingBottom: 20 }}>{description}</Text>
                 </Left>
             </CardItem>)
         }

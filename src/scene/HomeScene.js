@@ -45,7 +45,9 @@ class HomeScene extends Component {
       posts: [],
       posts2: [],
       image: "",
-      name: ""
+      name: "",
+      user:null,
+      favorites:null
     };
   }
 
@@ -53,6 +55,16 @@ class HomeScene extends Component {
     this.unsubscribe = this
       .ref
       .onSnapshot(this.onCollectionUpdate);
+      var id = firebase.auth().currentUser.uid;
+    firebase
+      .firestore()
+      .collection("favorites")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        this.setState({favorites:doc.data().posts});
+
+      });
   }
 
   componentWillUnmount() {
@@ -114,10 +126,12 @@ class HomeScene extends Component {
     if (change.length > 0)
   setTimeout(() => { 
     var newposts = this.state.posts;
+    console.log(newposts);
     for(var i =0; i<newposts.length;i++){
       for (var j = 0; j < change.length; j++) {
         if (newposts[i].id===change[j].id){
           change[i].user = newposts[i].user;
+          console.log(newposts[i]);
           change[i].link = newposts[i].link;
           newposts[i]=change[j];
           this.setState({posts:newposts});
@@ -295,6 +309,13 @@ class HomeScene extends Component {
           .update({ likes });
 
       });
+      var post = 
+      firebase
+      .firestore()
+      .collection("posts")
+      .doc(item.id);
+      console.log(this.state.favorites.includes(post));
+      console.log(this.state.favorites);
   }
   renderDescription(description) {
     if (description.length > 0) {
