@@ -10,6 +10,7 @@ import RegisterScene from './src/scene/RegisterScene';
 import PostDetails from './src/scene/PostDetails';
 import SendScene from './src/scene/SendScene';
 import EditScene from './src/scene/EditScene';
+import ImageScene from './src/scene/ImageScene';
 class App extends Component {
   render() {
     return (
@@ -24,6 +25,7 @@ class App extends Component {
           <Scene key='PostDetails' component={PostDetails} hideNavBar/>
           <Scene key='SendScene' component={SendScene} hideNavBar/>
           <Scene key='EditScene' component={EditScene} hideNavBar />
+          <Scene key='ImageScene' component={ImageScene} hideNavBar/>
         </Stack>
       </Router>
     );
